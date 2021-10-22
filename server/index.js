@@ -81,7 +81,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
     await app.locals.db.collection("CovidTallyPubSub").find({}).sort(sortedTotalCases).toArray((err,res) => {
         if(err)throw err;
         //
-        let serviceArray
+        var serviceArray = [];
         for(let i =0; i<10;++i) {
             arrayOfPromises1.push(new Promise(async (resolve, reject) => {
                 if(res){
@@ -89,14 +89,17 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                     switch (tableName) {
                         case "CasesSorted":
                             newServiceOne = new CasesSorted( res[i].newDocument.country,  res[i].newDocument.casestotal);
+                            serviceArray.push(newServiceOne);
                             break;
 
                         case "tests":
                             newServiceOne = new tests( res[i].newDocument.country,  res[i].newDocument.teststotalTests);
+                            serviceArray.push(newServiceOne);
                             break;
 
                         case "CasesSortedReverse":
                             newServiceOne = new CasesSortedReverse( res[i].newDocument.country,  res[i].newDocument.casestotal);
+                            serviceArray.push(newServiceOne);
                             break;
 
                     }

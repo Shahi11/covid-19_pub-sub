@@ -1,6 +1,6 @@
 module.exports = class CovidSortedReverse {
-    constructor(country, casestotal) {
+    constructor(country, safeCountriesToVisit) {
         this.country = country
-        this.casestotal = casestotal
+        this.safeCountriesToVisit = safeCountriesToVisit
     }
 }

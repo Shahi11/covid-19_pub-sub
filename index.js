@@ -38,6 +38,7 @@ MongoClient.connect(url, options, (err, database) => {
 io.on("connection", function (socket) {
   console.log("CONNECTION EST. TO PUB", socket.client.id);
   socket.on("pubToBroker", (data) => {
+    console.log("Inside server");
     console.log(data);
   });
 });
