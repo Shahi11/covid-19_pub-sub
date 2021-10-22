@@ -8,6 +8,7 @@ const Home = () => {
   const goToRegister = () => {
     window.location.href = "/signup";
   };
+
   return (
     <div>
       <headerr>

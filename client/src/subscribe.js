@@ -110,7 +110,9 @@ const Home = () => {
           id="demo"
           onClick={() => handleSubmit("service1")}
           style={{
-            backgroundColor: !subscriptionStatuses.service1 ? "red" : "green",
+            backgroundColor: !subscriptionStatuses.service1
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
           }}
         >
           {!subscriptionStatuses.service1
@@ -127,7 +129,9 @@ const Home = () => {
           id="demo"
           onClick={() => handleSubmit("service2")}
           style={{
-            backgroundColor: !subscriptionStatuses.service2 ? "red" : "green",
+            backgroundColor: !subscriptionStatuses.service2
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
           }}
         >
           {!subscriptionStatuses.service2
@@ -144,7 +148,9 @@ const Home = () => {
           id="demo"
           onClick={() => handleSubmit("service3")}
           style={{
-            backgroundColor: !subscriptionStatuses.service3 ? "red" : "green",
+            backgroundColor: !subscriptionStatuses.service3
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
           }}
         >
           {!subscriptionStatuses.service3

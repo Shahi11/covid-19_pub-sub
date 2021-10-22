@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const cors = require("cors");
+const io = require("socket.io")(3004);
 
 const url = `mongodb://localhost:27017/api`;
 const options = {
@@ -31,6 +32,13 @@ MongoClient.connect(url, options, (err, database) => {
     console.log(listener.address && listener.address());
     console.log("Listening on port " + port);
     app.emit("APP_STARTED");
+  });
+});
+
+io.on("connection", function (socket) {
+  console.log("CONNECTION EST. TO PUB", socket.client.id);
+  socket.on("pubToBroker", (data) => {
+    console.log(data);
   });
 });
 
