@@ -90,21 +90,30 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
       let status1 = false;
       let status2 = false;
 
-      var serviceArray = [];
-      if(cache.length !=0 && cache1.length !=0 && cache2.length !=0) {
+      var serviceArray = [] ;
+      console.log(typeof tableName);
+      if((tableName == "CasesSorted"  && cache.length !=0)){
         for (var k = 0; k < 10; k++) {
-          if (tableName == "CasesSorted" && cache[k] != res[k].newDocument.country) {
+          if (cache[k] != res[k].newDocument.country) {
             console.log('Abhinav 1', cache[k], JSON.stringify(res[k].newDocument.country))
             status = true;
             break;
           }
-          if (tableName == "tests" && cache1[k] != res[k].newDocument.country) {
-            console.log('Abhinav 2', cache1[k], JSON.stringify(res[k].newDocument.country))
+      }
+      }
+      else if((tableName == "tests"  && cache1.length !=0)){
+        for (var k = 0; k < 10; k++) {
+          if (cache1[k] != res[k].newDocument.country) {
+            console.log('Abhinav 1', cache1[k], JSON.stringify(res[k].newDocument.country))
             status1 = true;
             break;
           }
-          if (tableName == "CasesSortedReverse" && cache2[k] != res[k].newDocument.country) {
-            console.log('Abhinav 3', cache2[k], JSON.stringify(res[k].newDocument.country))
+        }
+      }
+      else if((tableName == "CasesSortedReverse"  && cache2.length !=0)){
+        for (var k = 0; k < 10; k++) {
+          if (cache2[k] != res[k].newDocument.country) {
+            console.log('Abhinav 1', cache2[k], JSON.stringify(res[k].newDocument.country))
             status2 = true;
             break;
           }
@@ -115,9 +124,9 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
         status = true
         status2 = true
        }
-      console.log(status,cache)
-      console.log(status1,cache1)
-      console.log(status2,cache2)
+      // console.log(status,cache)
+      // console.log(status1,cache1)
+      // console.log(status2,cache2)
 
       console.log("----------------")
       for (var j = 0; j < 10; ++j) {
@@ -129,12 +138,14 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
               switch (tableName) {
                 case "CasesSorted":
                   if (status) {
+                    console.log("helloo insidfe one")
                     cache[i] = res[i].newDocument.country;
-                    newServiceOne = new tests(
+                    newServiceOne = new CasesSorted(
                         res[i].newDocument.country,
                         res[i].newDocument.casestotal
                     );
                     serviceArray.push(newServiceOne);
+                    console.log(serviceArray)
                   }
 
                   break;
@@ -147,6 +158,8 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                         res[i].newDocument.teststotalTests
                     );
                     serviceArray.push(newServiceOne);
+                    console.log(serviceArray)
+
                   }
 
                   break;
@@ -154,11 +167,13 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                 case "CasesSortedReverse":
                   if (status2) {
                     cache2[i] = res[i].newDocument.country;
-                    newServiceOne = new tests(
+                    newServiceOne = new CasesSortedReverse(
                         res[i].newDocument.country,
                         res[i].newDocument.casestotal
                     );
                     serviceArray.push(newServiceOne);
+                    console.log(serviceArray)
+
                   }
 
                   break;
@@ -182,9 +197,14 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
           })
         );
       }
+      console.log
       socket.on("connect", function () {
         console.log("connected to localhost:3004");
+        console.log((serviceArray));
         if (Object.keys(serviceArray).length > 0) {
+          console.log(
+              "inside sending fiorward",serviceArray
+          );
           socket.emit("pubToBroker", serviceArray);
         }
       });
@@ -271,7 +291,7 @@ async function checkUpdates() {
   if (app.locals.db.collection("CasesSorted").count() != 10) {
     Promise.all(arrayOfPromises)
       .then(async (res) => {
-        console.log("Final Result", res);
+        // console.log("Final Result", res);
         await task("casestotal", -1, "CasesSorted", () =>
           task("teststotalTests", -1, "tests", () =>
             task("casestotal", 1, "CasesSortedReverse", () => {})
