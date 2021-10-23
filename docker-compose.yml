@@ -7,3 +7,30 @@ services:
       - "15672:15672"
       - "61613:61613"
       - "15674:15674"
+  mongo:
+    image: mongo:5.0.3
+    ports:
+      - "27017:27017"
+  client:
+    image: client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+  server:
+    image: server
+    stdin_open: true
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - rabbitmq
+  covid-pub:
+    image: covid-pub
+    stdin_open: true
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+      - server

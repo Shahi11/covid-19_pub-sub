@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./feed.css";
 import { subscribeToTopic } from "./subscriber";
+import Swal from "sweetalert2";
 
 const setStorages = () => {
-  if (localStorage.getItem("service1") == "true") {
+  if (sessionStorage.getItem("service1") == "true") {
     subscribeToTopic("casestotal");
   }
 
-  if (localStorage.getItem("service2") == "true") {
+  if (sessionStorage.getItem("service2") == "true") {
     subscribeToTopic("totalTests");
   }
 
-  if (localStorage.getItem("service3") == "true") {
+  if (sessionStorage.getItem("service3") == "true") {
     subscribeToTopic("safeCountriesToVisit");
   }
-  if (localStorage.getItem("deadvertise") == "false") {
+  if (sessionStorage.getItem("deadvertise") == "false") {
     subscribeToTopic("ad");
   }
 };
@@ -23,44 +24,97 @@ const Home = () => {
   const [service1Data, setService1Data] = useState(null);
   const [service2Data, setService2Data] = useState(null);
   const [service3Data, setService3Data] = useState(null);
+  const [heading, setHeading] = useState(null);
   const [adData, setadData] = useState(null);
-  const goToLogin = () => {
-    window.location.href = "/login-page";
-  };
+  const [deadvertise, setDeadvertise] = useState(null);
 
   const setDatas = () => {
-    setService1Data(JSON.parse(localStorage.getItem("casestotal")));
-    setService2Data(JSON.parse(localStorage.getItem("totalTests")));
-    setService3Data(JSON.parse(localStorage.getItem("safeCountriesToVisit")));
+    setService1Data(JSON.parse(sessionStorage.getItem("casestotal")));
+    setService2Data(JSON.parse(sessionStorage.getItem("totalTests")));
+    setService3Data(JSON.parse(sessionStorage.getItem("safeCountriesToVisit")));
+    setadData(JSON.parse(sessionStorage.getItem("ad")));
+    setDeadvertise(sessionStorage.getItem("deadvertise"));
+    if (sessionStorage.getItem("service1") == "true") {
+      subscribeToTopic("casestotal");
+    }
+
+    if (sessionStorage.getItem("service2") == "true") {
+      subscribeToTopic("totalTests");
+    }
+
+    if (sessionStorage.getItem("service3") == "true") {
+      subscribeToTopic("safeCountriesToVisit");
+    }
+    if (sessionStorage.getItem("deadvertise") == "false") {
+      subscribeToTopic("ad");
+    }
+  };
+
+  const handledeadvertise = () => {
+    const res = fetch("http://localhost:5000/lsds/deadvertise", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: sessionStorage.getItem("USER_EMAIL"),
+        deadvertise: true,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setDeadvertise(true);
+        sessionStorage.setItem("deadvertise", true);
+        if (true) {
+          Swal.fire({
+            title: "You won't receive advertisements anymore!",
+            icon: "success",
+            buttons: ["NO", "YES"],
+          }).then(function (isConfirm) {
+            if (isConfirm) {
+            } else {
+              //if no clicked => do something else
+            }
+          });
+        }
+      })
+      .catch((err) => console.log("My error, ", err));
   };
 
   useEffect(() => {
     setStorages();
     setDatas();
     window.addEventListener("fetch-ls", setDatas);
+    if (sessionStorage.getItem("service1") == "false") {
+      setHeading(<h4>Top covid hit countries:</h4>);
+    } else if (sessionStorage.getItem("service2") == "false") {
+      setHeading(<h4>Top covid testing countries:</h4>);
+    } else {
+      setHeading(<h4>Safe to travel countries:</h4>);
+    }
     return () => {
       window.removeEventListener("fetch-ls", setDatas);
     };
   }, []);
 
-  const goToRegister = () => {
-    window.location.href = "/signup";
-  };
-
   const countryTab = ({ country }) => (
-    <div className="countryTab">{country}</div>
+    <>
+      <div className="countryTab">{country}</div>
+    </>
   );
 
   return (
     <div>
-      <headerr>
-        <h2>Welcome! {localStorage.getItem("USER_EMAIL")}</h2>
+      <header>
+        <h2>Welcome! {sessionStorage.getItem("USER_EMAIL")}</h2>
         <h4>Here are your subscribed data!</h4>
-      </headerr>
+      </header>
       <br />
-      {localStorage.getItem("service1") == "false" &&
-        localStorage.getItem("service2") == "false" &&
-        localStorage.getItem("service3") == "false" && (
+      {sessionStorage.getItem("service1") == "false" &&
+        sessionStorage.getItem("service2") == "false" &&
+        sessionStorage.getItem("service3") == "false" && (
           <>
             <div>
               <h3>
@@ -72,7 +126,7 @@ const Home = () => {
         )}
 
       <br />
-      {localStorage.getItem("service1") == "true" && service1Data && (
+      {sessionStorage.getItem("service1") == "true" && service1Data && (
         <>
           <h2>COVID HOTSPOTS</h2>
           <div className="serviceContainer">
@@ -83,7 +137,7 @@ const Home = () => {
         </>
       )}
       <br />
-      {localStorage.getItem("service2") == "true" && service2Data && (
+      {sessionStorage.getItem("service2") == "true" && service2Data && (
         <>
           <h2>TOP TESTING SITES</h2>
           <div className="serviceContainer">
@@ -94,7 +148,7 @@ const Home = () => {
         </>
       )}
       <br />
-      {localStorage.getItem("service3") == "true" && service3Data && (
+      {sessionStorage.getItem("service3") == "true" && service3Data && (
         <>
           <h2>SAFE COUNTRIES TO TRAVEL</h2>
           <div className="serviceContainer">
@@ -105,21 +159,33 @@ const Home = () => {
         </>
       )}
       <br />
-      {localStorage.getItem("deadvertise") == "false" && adData && (
-        <>
-          <div>
-            <h3 class="ad">
-              You can subsribe to this topic to stay updated with the latest
-              covid related inforation
-            </h3>
-            <div className="serviceContainer">
-              {adData.map((x) => {
-                return countryTab(x);
-              })}
+      {(sessionStorage.getItem("service1") == "false" ||
+        sessionStorage.getItem("service2") == "false" ||
+        sessionStorage.getItem("service3") == "false") &&
+        deadvertise == "false" &&
+        adData && (
+          <>
+            <div>
+              <h5 class="ad">
+                Advertisement:
+                <button class="buttonn" onClick={handledeadvertise}>
+                  <span>Not interested </span>
+                </button>
+              </h5>
+              <h6>
+                You can subsribe to this topic to stay updated with the latest
+                covid related information like below:
+              </h6>
+              <h2>{!!heading && heading}</h2>
+
+              <div className="serviceContainerad">
+                {adData.map((x) => {
+                  return countryTab(x);
+                })}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
       <br />
     </div>

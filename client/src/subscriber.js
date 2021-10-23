@@ -7,14 +7,14 @@ export function subscribeToTopic(topicId) {
     stompClient.subscribe("queue." + topicId, function ({ body }) {
       body = JSON.parse(body);
       if (body[0].safeCountriesToVisit) {
-        localStorage.setItem("safeCountriesToVisit", JSON.stringify(body));
+        sessionStorage.setItem("safeCountriesToVisit", JSON.stringify(body));
       } else if (body[0].casestotal) {
-        localStorage.setItem("casestotal", JSON.stringify(body));
+        sessionStorage.setItem("casestotal", JSON.stringify(body));
       } else if (body[0].totalTests) {
-        localStorage.setItem("totalTests", JSON.stringify(body));
+        sessionStorage.setItem("totalTests", JSON.stringify(body));
       }
       if (topicId == "ad") {
-        localStorage.setItem("ad", JSON.stringify(body));
+        sessionStorage.setItem("ad", JSON.stringify(body));
       }
       const customEvent = new CustomEvent("fetch-ls", {
         detail: {

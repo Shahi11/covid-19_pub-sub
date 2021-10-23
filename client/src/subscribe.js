@@ -13,7 +13,7 @@ const Home = () => {
     useState(INIT_SUBSCRIPTIONS);
 
   useEffect(() => {
-    const email = localStorage.getItem("USER_EMAIL");
+    const email = sessionStorage.getItem("USER_EMAIL");
     const res = fetch("http://localhost:5000/lsds/subscribe/list/" + email, {
       method: "GET",
       mode: "cors",
@@ -26,10 +26,10 @@ const Home = () => {
       .then(({ newDocument }) => {
         console.log(newDocument);
 
-        localStorage.setItem("service1", newDocument.service1 || false);
-        localStorage.setItem("service2", newDocument.service2 || false);
-        localStorage.setItem("service3", newDocument.service3 || false);
-        localStorage.setItem("deadvertise", newDocument.deadvertise || false);
+        sessionStorage.setItem("service1", newDocument.service1 || false);
+        sessionStorage.setItem("service2", newDocument.service2 || false);
+        sessionStorage.setItem("service3", newDocument.service3 || false);
+        sessionStorage.setItem("deadvertise", newDocument.deadvertise || false);
 
         setSubscriptionStatuses({
           service1: newDocument.service1 || false,
@@ -64,13 +64,13 @@ const Home = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: localStorage.getItem("USER_EMAIL"),
+        email: sessionStorage.getItem("USER_EMAIL"),
         [serviceName]: finalStatuses[serviceName],
       }),
     })
       .then((res) => res.json())
       .then((res) => {
-        localStorage.setItem(serviceName, finalStatuses[serviceName]);
+        sessionStorage.setItem(serviceName, finalStatuses[serviceName]);
         if (finalStatuses[serviceName]) {
           Swal.fire({
             title: "Successfully Subscribed",
@@ -106,7 +106,7 @@ const Home = () => {
     <div>
       <divs>
         <h1>Services</h1>
-        <p>{localStorage.getItem("USER_EMAIL")}</p>
+        <p>{sessionStorage.getItem("USER_EMAIL")}</p>
       </divs>
 
       <div class="user js-user-1">

@@ -1,12 +1,12 @@
-const CovidTallyPubSub = require("../models/CovidTallyPubSub");
-const CasesSorted = require("../models/CasesSorted");
-const tests = require("../models/tests");
-const CasesSortedReverse = require("../models/CasesSortedReverse");
+const CovidTallyPubSub = require("./models/CovidTallyPubSub");
+const CasesSorted = require("./models/CasesSorted");
+const tests = require("./models/tests");
+const CasesSortedReverse = require("./models/CasesSortedReverse");
 let cache = [];
 let cache1 = [];
 let cache2 = [];
 var io = require("socket.io-client");
-var socket = io.connect("http://localhost:3004/", {
+var socket = io.connect("http://server:3004/", {
   reconnection: true,
 });
 
@@ -17,45 +17,17 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const cors = require("cors");
 
-const url = `mongodb://localhost:27017`;
+const url = `mongodb://mongo:27017`;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-const routes = require("../routes/routes.js");
-const { response } = require("express");
-const port = process.env.PORT || 80;
+
 const app = express();
+
 app.use(cors({}));
+
 const http = require("http").Server(app);
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use("/lsds", routes);
-app.use((req, res) => {
-  res.status(404);
-});
-/*
-cron.schedule('/30 * * * *', checkUpdates());
-
-function checkUpdates()
-{
-  fetchallAPI()
-  console.log('Inside check updates ')
-  router.post('/covidTally', (req, res, next) => {
-    if(req.body.country == )
-    const newDocument = new CovidTally(req.body.country, req.body.code, req.body.confirmed, req.body.recovered, req.body.critical,req.body.deaths,req.body.lastupdate)
-    req.app.locals.db.collection('CovidTally').insertOne({
-      newDocument
-    }, (err, result) => {
-      if (err) {
-        res.status(400).send({'error': err})
-      }
-      res.status(200).send(result)
-    })
-  })
-}
-*/
 
 MongoClient.connect(url, options, (err, database) => {
   if (err) {
@@ -65,11 +37,12 @@ MongoClient.connect(url, options, (err, database) => {
   app.locals.db = database.db("api");
   const listener = http.listen(4000, "0.0.0.0", () => {
     console.log(listener.address && listener.address());
-    console.log("Listening on port " + port);
-    app.emit("APP_STARTED");
-
+    console.log("App started on port 4000");
+    socket.on("connect", function () {
+      console.log("connected to server:3004");
+      setInterval(checkUpdates, 3000);
+    });
     // Scheduler : runs every 10 seconds
-    setInterval(checkUpdates, 20000);
   });
 });
 
@@ -90,45 +63,54 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
       let status1 = false;
       let status2 = false;
 
-      var serviceArray = [] ;
+      var serviceArray = [];
       console.log(typeof tableName);
-      if((tableName == "CasesSorted"  && cache.length !=0)){
+      if (tableName == "CasesSorted" && cache.length != 0) {
         for (var k = 0; k < 10; k++) {
           if (cache[k] != res[k].newDocument.country) {
-            console.log('Abhinav 1', cache[k], JSON.stringify(res[k].newDocument.country))
+            console.log(
+              "Abhinav 1",
+              cache[k],
+              JSON.stringify(res[k].newDocument.country)
+            );
             status = true;
             break;
           }
-      }
-      }
-      else if((tableName == "tests"  && cache1.length !=0)){
+        }
+      } else if (tableName == "tests" && cache1.length != 0) {
         for (var k = 0; k < 10; k++) {
           if (cache1[k] != res[k].newDocument.country) {
-            console.log('Abhinav 1', cache1[k], JSON.stringify(res[k].newDocument.country))
+            console.log(
+              "Abhinav 1",
+              cache1[k],
+              JSON.stringify(res[k].newDocument.country)
+            );
             status1 = true;
             break;
           }
         }
-      }
-      else if((tableName == "CasesSortedReverse"  && cache2.length !=0)){
+      } else if (tableName == "CasesSortedReverse" && cache2.length != 0) {
         for (var k = 0; k < 10; k++) {
           if (cache2[k] != res[k].newDocument.country) {
-            console.log('Abhinav 1', cache2[k], JSON.stringify(res[k].newDocument.country))
+            console.log(
+              "Abhinav 1",
+              cache2[k],
+              JSON.stringify(res[k].newDocument.country)
+            );
             status2 = true;
             break;
           }
         }
+      } else {
+        status1 = true;
+        status = true;
+        status2 = true;
       }
-      else{
-        status1 = true
-        status = true
-        status2 = true
-       }
       // console.log(status,cache)
       // console.log(status1,cache1)
       // console.log(status2,cache2)
 
-      console.log("----------------")
+      console.log("----------------");
       for (var j = 0; j < 10; ++j) {
         let i = j;
         arrayOfPromises1.push(
@@ -138,14 +120,14 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
               switch (tableName) {
                 case "CasesSorted":
                   if (status) {
-                    console.log("helloo insidfe one")
+                    console.log("helloo insidfe one");
                     cache[i] = res[i].newDocument.country;
                     newServiceOne = new CasesSorted(
-                        res[i].newDocument.country,
-                        res[i].newDocument.casestotal
+                      res[i].newDocument.country,
+                      res[i].newDocument.casestotal
                     );
                     serviceArray.push(newServiceOne);
-                    console.log(serviceArray)
+                    console.log(serviceArray);
                   }
 
                   break;
@@ -154,12 +136,11 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   if (status1) {
                     cache1[i] = res[i].newDocument.country;
                     newServiceOne = new tests(
-                        res[i].newDocument.country,
-                        res[i].newDocument.teststotalTests
+                      res[i].newDocument.country,
+                      res[i].newDocument.teststotalTests
                     );
                     serviceArray.push(newServiceOne);
-                    console.log(serviceArray)
-
+                    console.log(serviceArray);
                   }
 
                   break;
@@ -168,12 +149,11 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   if (status2) {
                     cache2[i] = res[i].newDocument.country;
                     newServiceOne = new CasesSortedReverse(
-                        res[i].newDocument.country,
-                        res[i].newDocument.casestotal
+                      res[i].newDocument.country,
+                      res[i].newDocument.casestotal
                     );
                     serviceArray.push(newServiceOne);
-                    console.log(serviceArray)
-
+                    console.log(serviceArray);
                   }
 
                   break;
@@ -197,18 +177,14 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
           })
         );
       }
-      console.log
-      socket.on("connect", function () {
-        console.log("connected to localhost:3004");
-        console.log((serviceArray));
-        if (Object.keys(serviceArray).length > 0) {
-          console.log(
-              "inside sending fiorward",serviceArray
-          );
-          socket.emit("pubToBroker", serviceArray);
-        }
-      });
-      //
+
+      if (Object.keys(serviceArray).length > 0) {
+        console.log("inside sending fiorward", serviceArray);
+        socket.emit("pubToBroker", serviceArray);
+      }
+      cache = [];
+      cache1 = [];
+      cache2 = [];
     });
 
   await Promise.all(arrayOfPromises1).then((res) => {
@@ -253,7 +229,7 @@ async function checkUpdates() {
             }
             // if (!result) {
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-             //if ( JSON.stringify( apiResponse.response[i].country) !=  JSON.stringify( apiResponse.response[i].continent)){
+            //if ( JSON.stringify( apiResponse.response[i].country) !=  JSON.stringify( apiResponse.response[i].continent)){
             const newDocument = new CovidTallyPubSub(
               apiResponse.response[i].country,
               apiResponse.response[i].cases.active,
@@ -278,7 +254,7 @@ async function checkUpdates() {
                 }
               }
             );
-              //}
+            //}
           }
         );
       })

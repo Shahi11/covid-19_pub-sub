@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const Swal = require("sweetalert2");
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
@@ -30,7 +29,6 @@ export default function Login() {
       .then((res) => res.json())
       .then((res) => {
         if (res == true) {
-          localStorage.setItem("USER_EMAIL", event.target[0].value);
           Swal.fire({
             title: "Welcome Back",
             text: "Logging you in",
@@ -39,6 +37,8 @@ export default function Login() {
           }).then(function (isConfirm) {
             if (isConfirm) {
               window.location.href = "/login";
+
+              sessionStorage.setItem("USER_EMAIL", event.target[0].value);
             } else {
               //if no clicked => do something else
             }
