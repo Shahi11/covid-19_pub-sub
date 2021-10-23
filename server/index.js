@@ -93,17 +93,17 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
       var serviceArray = [];
       if(cache.length !=0 && cache1.length !=0 && cache2.length !=0) {
         for (var k = 0; k < 10; k++) {
-          if (tableName == "CasesSorted" && cache[k] != JSON.stringify(res[k].newDocument.country)) {
+          if (tableName == "CasesSorted" && cache[k] != res[k].newDocument.country) {
             console.log('Abhinav 1', cache[k], JSON.stringify(res[k].newDocument.country))
             status = true;
             break;
           }
-          if (tableName == "tests" && cache1[k] != JSON.stringify(res[k].newDocument.country)) {
+          if (tableName == "tests" && cache1[k] != res[k].newDocument.country) {
             console.log('Abhinav 2', cache1[k], JSON.stringify(res[k].newDocument.country))
             status1 = true;
             break;
           }
-          if (tableName == "CasesSortedReverse" && cache2[k] != JSON.stringify(res[k].newDocument.country)) {
+          if (tableName == "CasesSortedReverse" && cache2[k] != res[k].newDocument.country) {
             console.log('Abhinav 3', cache2[k], JSON.stringify(res[k].newDocument.country))
             status2 = true;
             break;
@@ -129,7 +129,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
               switch (tableName) {
                 case "CasesSorted":
                   if (status) {
-                    cache[i] = JSON.stringify(res[i].newDocument.country);
+                    cache[i] = res[i].newDocument.country;
                     newServiceOne = new tests(
                         res[i].newDocument.country,
                         res[i].newDocument.casestotal
@@ -141,7 +141,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                 case "tests":
                   if (status1) {
-                    cache1[i] = JSON.stringify(res[i].newDocument.country);
+                    cache1[i] = res[i].newDocument.country;
                     newServiceOne = new tests(
                         res[i].newDocument.country,
                         res[i].newDocument.teststotalTests
@@ -153,7 +153,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                 case "CasesSortedReverse":
                   if (status2) {
-                    cache2[i] = JSON.stringify(res[i].newDocument.country);
+                    cache2[i] = res[i].newDocument.country;
                     newServiceOne = new tests(
                         res[i].newDocument.country,
                         res[i].newDocument.casestotal
@@ -233,7 +233,7 @@ async function checkUpdates() {
             }
             // if (!result) {
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-            // if ( apiResponse.response[i].country !=  apiResponse.response[i].continent){
+             //if ( JSON.stringify( apiResponse.response[i].country) !=  JSON.stringify( apiResponse.response[i].continent)){
             const newDocument = new CovidTallyPubSub(
               apiResponse.response[i].country,
               apiResponse.response[i].cases.active,
