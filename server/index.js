@@ -69,7 +69,7 @@ MongoClient.connect(url, options, (err, database) => {
     app.emit("APP_STARTED");
 
     // Scheduler : runs every 10 seconds
-    setInterval(checkUpdates, 10000);
+    setInterval(checkUpdates, 20000);
   });
 });
 
@@ -89,20 +89,37 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
       let status = false;
       let status1 = false;
       let status2 = false;
-      if (cache.length == 0) {
-        status = true;
-      }
-      //      else{
-      // for (let i = 0; i< 10;i++){
-      //     var temp = JSON.stringify(res[i].newDocument.country)
-      //     console.log( (cache[i]),(temp))
-      //     if(! (cache[i] == (temp))){
-      //         status = true
-      //         break
-      //     }
-      // }
-      //  }
+
       var serviceArray = [];
+      if(cache.length !=0 && cache1.length !=0 && cache2.length !=0) {
+        for (var k = 0; k < 10; k++) {
+          if (tableName == "CasesSorted" && cache[k] != JSON.stringify(res[k].newDocument.country)) {
+            console.log('Abhinav 1', cache[k], JSON.stringify(res[k].newDocument.country))
+            status = true;
+            break;
+          }
+          if (tableName == "tests" && cache1[k] != JSON.stringify(res[k].newDocument.country)) {
+            console.log('Abhinav 2', cache1[k], JSON.stringify(res[k].newDocument.country))
+            status1 = true;
+            break;
+          }
+          if (tableName == "CasesSortedReverse" && cache2[k] != JSON.stringify(res[k].newDocument.country)) {
+            console.log('Abhinav 3', cache2[k], JSON.stringify(res[k].newDocument.country))
+            status2 = true;
+            break;
+          }
+        }
+      }
+      else{
+        status1 = true
+        status = true
+        status2 = true
+       }
+      console.log(status,cache)
+      console.log(status1,cache1)
+      console.log(status2,cache2)
+
+      console.log("----------------")
       for (var j = 0; j < 10; ++j) {
         let i = j;
         arrayOfPromises1.push(
@@ -111,72 +128,39 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
               let newServiceOne;
               switch (tableName) {
                 case "CasesSorted":
-                  var temp = JSON.stringify(res[i].newDocument.country);
-                  console.log(i, temp, cache[i]);
-                  if (
-                    cache.length < 10 ||
-                    (cache.length == 10 && cache[i] == temp)
-                  ) {
-                    status = false;
-                    cache[i] = temp;
-                  } else {
-                    status = true;
-                    cache[i] = temp;
-                  }
-                  console.log(status);
                   if (status) {
-                    newServiceOne = new CasesSorted(
-                      res[i].newDocument.country,
-                      res[i].newDocument.casestotal
+                    cache[i] = JSON.stringify(res[i].newDocument.country);
+                    newServiceOne = new tests(
+                        res[i].newDocument.country,
+                        res[i].newDocument.casestotal
                     );
                     serviceArray.push(newServiceOne);
                   }
+
                   break;
 
                 case "tests":
-                  var temp = JSON.stringify(res[i].newDocument.country);
-                  console.log(i, temp, cache1[i]);
-                  if (
-                    cache1.length < 10 ||
-                    (cache1.length == 10 && cache1[i] == temp)
-                  ) {
-                    status1 = false;
-                    cache1[i] = temp;
-                  } else {
-                    status1 = true;
-                    cache1[i] = temp;
-                  }
-                  console.log(status1);
                   if (status1) {
+                    cache1[i] = JSON.stringify(res[i].newDocument.country);
                     newServiceOne = new tests(
-                      res[i].newDocument.country,
-                      res[i].newDocument.teststotalTests
+                        res[i].newDocument.country,
+                        res[i].newDocument.teststotalTests
                     );
                     serviceArray.push(newServiceOne);
                   }
+
                   break;
 
                 case "CasesSortedReverse":
-                  var temp = JSON.stringify(res[i].newDocument.country);
-                  console.log(i, temp, cache2[i]);
-                  if (
-                    cache2.length < 10 ||
-                    (cache2.length == 10 && cache2[i] == temp)
-                  ) {
-                    status2 = false;
-                    cache2[i] = temp;
-                  } else {
-                    status2 = true;
-                    cache2[i] = temp;
-                  }
-                  console.log(status2);
                   if (status2) {
-                    newServiceOne = new CasesSortedReverse(
-                      res[i].newDocument.country,
-                      res[i].newDocument.casestotal
+                    cache2[i] = JSON.stringify(res[i].newDocument.country);
+                    newServiceOne = new tests(
+                        res[i].newDocument.country,
+                        res[i].newDocument.casestotal
                     );
                     serviceArray.push(newServiceOne);
                   }
+
                   break;
               }
 
@@ -249,7 +233,7 @@ async function checkUpdates() {
             }
             // if (!result) {
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-            // if (apiResponse.response[i].country != apiResponse.response[i].continent){
+            // if ( apiResponse.response[i].country !=  apiResponse.response[i].continent){
             const newDocument = new CovidTallyPubSub(
               apiResponse.response[i].country,
               apiResponse.response[i].cases.active,
@@ -274,8 +258,7 @@ async function checkUpdates() {
                 }
               }
             );
-            //  }
-            // }
+              //}
           }
         );
       })
@@ -298,95 +281,7 @@ async function checkUpdates() {
       .catch((err) => {
         console.log("Final errors", err);
       });
-  } else {
-    let sortedTotalCases = {
-      [`newDocument.casestotal`]: -1,
-    };
-    let k = 0;
-    app.locals.db
-      .collection("CovidTallyPubSub")
-      .find({})
-      .sort(sortedTotalCases)
-      .toArray((err, res) => {
-        for (let i = 0; i < 10; i++) {
-          if (
-            res[i].newDocument.country !=
-            app.locals.db.collection("CasesSorted").newServiceOne.country
-          ) {
-            k = 1;
-          }
-        }
-        if (k == 1) {
-          Promise.all(arrayOfPromises)
-            .then(async (res) => {
-              console.log("Final Result", res);
-              await task("casestotal", -1, "CasesSorted", () => {});
-            })
-            .catch((err) => {
-              console.log("Final errors", err);
-            });
-          k = 0;
-        }
-      });
-    let sortedTests = {
-      [`newDocument.teststotalTests`]: -1,
-    };
-    app.locals.db
-      .collection("CovidTallyPubSub")
-      .find({})
-      .sort(sortedTests)
-      .toArray((err, res) => {
-        for (let i = 0; i < 10; i++) {
-          if (
-            res[i].newDocument.country !=
-            app.locals.db.collection("tests").newServiceOne[i].country
-          ) {
-            k = 1;
-          }
-        }
-        if (k == 1) {
-          Promise.all(arrayOfPromises)
-            .then(async (res) => {
-              console.log("Final Result", res);
-              await task("teststotalTests", -1, "tests", () => {});
-            })
-            .catch((err) => {
-              console.log("Final errors", err);
-            });
-          k = 0;
-        }
-      });
-    let sortedReverseCases = {
-      [`newDocument.casestotal`]: 1,
-    };
-    app.locals.db
-      .collection("CovidTallyPubSub")
-      .find({})
-      .sort(sortedReverseCases)
-      .toArray((err, res) => {
-        for (let i = 0; i < 10; i++) {
-          if (
-            res[i].newDocument.country !=
-            app.locals.db.collection("CasesSortedReverse").newServiceOne[i]
-              .country
-          ) {
-            k = 1;
-          }
-        }
-        if (k == 1) {
-          Promise.all(arrayOfPromises)
-            .then(async (res) => {
-              console.log("Final Result", res);
-              await task("casestotal", 1, "CasesSortedReverse", () => {});
-            })
-            .catch((err) => {
-              console.log("Final errors", err);
-            });
-          k = 0;
-        }
-      });
   }
-  //////
 }
 
 module.exports = app;
