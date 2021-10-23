@@ -58,3 +58,13 @@ headerr {
   margin-top: 20px;
   background-color: aliceblue;
 }
+
+.ad {
+  background-color: rgb(176, 120, 187);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+  margin-right: 20px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}

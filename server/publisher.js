@@ -21,7 +21,7 @@ const publishMessage = async (topicId, message) => {
 
   try {
     console.log("Publishing");
-    const exchange = "cricketQueue";
+    const exchange = "CovidQueue";
     const queue = "queue." + topicId;
     const routingKey = topicId;
 

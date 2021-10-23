@@ -189,4 +189,26 @@ router.get("/subscribe/list/:email", (req, res, next) => {
     }
   );
 });
+
+router.post("/deadvertise", (req, res, next) => {
+  // const newDocument = new userinfo(req.body.username, req.body.password);
+
+  req.app.locals.db.collection("userinfo").updateOne(
+    {
+      "newDocument.email": req.body.email,
+    },
+    {
+      $set: {
+        "newDocument.deadvertise": req.body.deadvertise,
+      },
+    },
+    (err, result) => {
+      if (err) {
+        res.status(400).send({ error: err });
+      }
+      res.status(200).send(result);
+    }
+  );
+});
+
 module.exports = router;

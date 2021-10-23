@@ -2,7 +2,9 @@ const CovidTallyPubSub = require("../models/CovidTallyPubSub");
 const CasesSorted = require("../models/CasesSorted");
 const tests = require("../models/tests");
 const CasesSortedReverse = require("../models/CasesSortedReverse");
-
+let cache = [];
+let cache1 = [];
+let cache2 = [];
 var io = require("socket.io-client");
 var socket = io.connect("http://localhost:3004/", {
   reconnection: true,
@@ -73,6 +75,7 @@ MongoClient.connect(url, options, (err, database) => {
 
 const task = async (sortKey, sortIndex = -1, tableName, callback) => {
   let arrayOfPromises1 = [];
+  console.log("inside task");
   await app.locals.db.collection(tableName).deleteMany({});
   let sortedTotalCases = {
     [`newDocument.${sortKey}`]: sortIndex,
@@ -83,36 +86,97 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
     .sort(sortedTotalCases)
     .toArray((err, res) => {
       if (err) throw err;
-      //
+      let status = false;
+      let status1 = false;
+      let status2 = false;
+      if (cache.length == 0) {
+        status = true;
+      }
+      //      else{
+      // for (let i = 0; i< 10;i++){
+      //     var temp = JSON.stringify(res[i].newDocument.country)
+      //     console.log( (cache[i]),(temp))
+      //     if(! (cache[i] == (temp))){
+      //         status = true
+      //         break
+      //     }
+      // }
+      //  }
       var serviceArray = [];
-      for (let i = 0; i < 10; ++i) {
+      for (var j = 0; j < 10; ++j) {
+        let i = j;
         arrayOfPromises1.push(
           new Promise(async (resolve, reject) => {
             if (res) {
               let newServiceOne;
               switch (tableName) {
                 case "CasesSorted":
-                  newServiceOne = new CasesSorted(
-                    res[i].newDocument.country,
-                    res[i].newDocument.casestotal
-                  );
-                  serviceArray.push(newServiceOne);
+                  var temp = JSON.stringify(res[i].newDocument.country);
+                  console.log(i, temp, cache[i]);
+                  if (
+                    cache.length < 10 ||
+                    (cache.length == 10 && cache[i] == temp)
+                  ) {
+                    status = false;
+                    cache[i] = temp;
+                  } else {
+                    status = true;
+                    cache[i] = temp;
+                  }
+                  console.log(status);
+                  if (status) {
+                    newServiceOne = new CasesSorted(
+                      res[i].newDocument.country,
+                      res[i].newDocument.casestotal
+                    );
+                    serviceArray.push(newServiceOne);
+                  }
                   break;
 
                 case "tests":
-                  newServiceOne = new tests(
-                    res[i].newDocument.country,
-                    res[i].newDocument.teststotalTests
-                  );
-                  serviceArray.push(newServiceOne);
+                  var temp = JSON.stringify(res[i].newDocument.country);
+                  console.log(i, temp, cache1[i]);
+                  if (
+                    cache1.length < 10 ||
+                    (cache1.length == 10 && cache1[i] == temp)
+                  ) {
+                    status1 = false;
+                    cache1[i] = temp;
+                  } else {
+                    status1 = true;
+                    cache1[i] = temp;
+                  }
+                  console.log(status1);
+                  if (status1) {
+                    newServiceOne = new tests(
+                      res[i].newDocument.country,
+                      res[i].newDocument.teststotalTests
+                    );
+                    serviceArray.push(newServiceOne);
+                  }
                   break;
 
                 case "CasesSortedReverse":
-                  newServiceOne = new CasesSortedReverse(
-                    res[i].newDocument.country,
-                    res[i].newDocument.casestotal
-                  );
-                  serviceArray.push(newServiceOne);
+                  var temp = JSON.stringify(res[i].newDocument.country);
+                  console.log(i, temp, cache2[i]);
+                  if (
+                    cache2.length < 10 ||
+                    (cache2.length == 10 && cache2[i] == temp)
+                  ) {
+                    status2 = false;
+                    cache2[i] = temp;
+                  } else {
+                    status2 = true;
+                    cache2[i] = temp;
+                  }
+                  console.log(status2);
+                  if (status2) {
+                    newServiceOne = new CasesSortedReverse(
+                      res[i].newDocument.country,
+                      res[i].newDocument.casestotal
+                    );
+                    serviceArray.push(newServiceOne);
+                  }
                   break;
               }
 
@@ -136,7 +200,9 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
       }
       socket.on("connect", function () {
         console.log("connected to localhost:3004");
-        socket.emit("pubToBroker", serviceArray);
+        if (Object.keys(serviceArray).length > 0) {
+          socket.emit("pubToBroker", serviceArray);
+        }
       });
       //
     });
@@ -183,13 +249,7 @@ async function checkUpdates() {
             }
             // if (!result) {
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-            console.log(
-              "Table inserted ",
-              apiResponse.response.length,
-              apiResponse.response[i].country,
-              apiResponse.response[i].cases.total,
-              apiResponse.response[i].tests.total
-            );
+            // if (apiResponse.response[i].country != apiResponse.response[i].continent){
             const newDocument = new CovidTallyPubSub(
               apiResponse.response[i].country,
               apiResponse.response[i].cases.active,
@@ -214,6 +274,7 @@ async function checkUpdates() {
                 }
               }
             );
+            //  }
             // }
           }
         );

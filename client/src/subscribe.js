@@ -29,6 +29,8 @@ const Home = () => {
         localStorage.setItem("service1", newDocument.service1 || false);
         localStorage.setItem("service2", newDocument.service2 || false);
         localStorage.setItem("service3", newDocument.service3 || false);
+        localStorage.setItem("deadvertise", newDocument.deadvertise || false);
+
         setSubscriptionStatuses({
           service1: newDocument.service1 || false,
           service2: newDocument.service2 || false,

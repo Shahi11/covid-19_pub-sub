@@ -37,17 +37,27 @@ MongoClient.connect(url, options, (err, database) => {
   });
 });
 
+let counter = 1;
 io.on("connection", function (socket) {
   console.log("CONNECTION EST. TO PUB", socket.client.id);
   socket.on("pubToBroker", (data) => {
     console.log("Inside server");
-    console.log(data);
+    console.log(data[0].safeCountriesToVisit);
+    counter++;
     if (data && data[0].safeCountriesToVisit) {
+      console.log("Inside pub");
       Publisher.publishMessage("safeCountriesToVisit", data);
     } else if (data && data[0].totalTests) {
+      console.log("Inside pub");
       Publisher.publishMessage("totalTests", data);
     } else if (data && data[0].casestotal) {
+      console.log("Inside pub");
       Publisher.publishMessage("casestotal", data);
+    }
+    console.log(counter % 5 == 0);
+
+    if (counter % 5 == 0) {
+      Publisher.publishMessage("ad", data);
     }
   });
 });

@@ -13,6 +13,9 @@ export function subscribeToTopic(topicId) {
       } else if (body[0].totalTests) {
         localStorage.setItem("totalTests", JSON.stringify(body));
       }
+      if (topicId == "ad") {
+        localStorage.setItem("ad", JSON.stringify(body));
+      }
       const customEvent = new CustomEvent("fetch-ls", {
         detail: {
           message: "Fetch local storage now",
