@@ -25,6 +25,10 @@ const Home = () => {
       .then((res) => res.json())
       .then(({ newDocument }) => {
         console.log(newDocument);
+
+        localStorage.setItem("service1", newDocument.service1 || false);
+        localStorage.setItem("service2", newDocument.service2 || false);
+        localStorage.setItem("service3", newDocument.service3 || false);
         setSubscriptionStatuses({
           service1: newDocument.service1 || false,
           service2: newDocument.service2 || false,
@@ -64,6 +68,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((res) => {
+        localStorage.setItem(serviceName, finalStatuses[serviceName]);
         if (finalStatuses[serviceName]) {
           Swal.fire({
             title: "Successfully Subscribed",

@@ -1,3 +1,5 @@
+const Publisher = require("./server/publisher");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
@@ -40,6 +42,13 @@ io.on("connection", function (socket) {
   socket.on("pubToBroker", (data) => {
     console.log("Inside server");
     console.log(data);
+    if (data && data[0].safeCountriesToVisit) {
+      Publisher.publishMessage("safeCountriesToVisit", data);
+    } else if (data && data[0].totalTests) {
+      Publisher.publishMessage("totalTests", data);
+    } else if (data && data[0].casestotal) {
+      Publisher.publishMessage("casestotal", data);
+    }
   });
 });
 

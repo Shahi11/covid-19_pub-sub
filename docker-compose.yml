@@ -1,19 +1,9 @@
 version: "3"
 services:
-  client:
-    image: client
-    stdin_open: true
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
     ports:
-      - "3000:3000"
-  server:
-    image: server
-    stdin_open: true
-    ports:
-      - "5000:5000"
-    depends_on:
-      - mongo
-  mongo:
-    image: mongo:5.0.3
-    ports:
-      - "27017:27017"
-
+      - "5672:5672"
+      - "15672:15672"
+      - "61613:61613"
+      - "15674:15674"

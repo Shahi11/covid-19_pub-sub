@@ -45,3 +45,16 @@ headerr {
   display: flex;
   flex-flow: column nowrap;
 }
+
+.serviceContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.countryTab {
+  padding: 5px;
+  margin-right: 20px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  background-color: aliceblue;
+}
