@@ -6,7 +6,7 @@ let cache = [];
 let cache1 = [];
 let cache2 = [];
 var io = require("socket.io-client");
-var socket = io.connect("http://server:3004/", {
+var socket = io.connect("http://localhost:3005/", {
   reconnection: true,
 });
 
@@ -17,7 +17,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const cors = require("cors");
 
-const url = `mongodb://mongo:27017`;
+const url = `mongodb://localhost:27017`;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -38,9 +38,10 @@ MongoClient.connect(url, options, (err, database) => {
   const listener = http.listen(4000, "0.0.0.0", () => {
     console.log(listener.address && listener.address());
     console.log("App started on port 4000");
+
     socket.on("connect", function () {
-      console.log("connected to server:3004");
-      setInterval(checkUpdates, 3000);
+      console.log("connected to server:3005");
+      setInterval(checkUpdates, 30000);
     });
     // Scheduler : runs every 10 seconds
   });
@@ -180,7 +181,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
       if (Object.keys(serviceArray).length > 0) {
         console.log("inside sending fiorward", serviceArray);
-        socket.emit("pubToBroker", serviceArray);
+        socket.emit("broker1", serviceArray, 0);
       }
       cache = [];
       cache1 = [];

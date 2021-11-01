@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./signup.css";
-import Swal from "sweetalert2";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -20,7 +19,7 @@ export default function Signup() {
   async function handleSubmit(event) {
     event.preventDefault();
     console.log(event.target[0].value);
-    const res = fetch("http://localhost:5000/lsds/login/add", {
+    const res1 = fetch("http://localhost:5000/lsds/login/add", {
       method: "POST",
       mode: "cors",
       headers: {

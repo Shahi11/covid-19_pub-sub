@@ -5,11 +5,11 @@ body {
 
 input {
   padding: 10px;
-  font-size: 14px;
+  font-size: 12px;
   font: inherit;
 }
 
-button {
+butt {
   font: inherit;
   padding: 10px;
   border-radius: 10px;
@@ -20,10 +20,21 @@ button {
   cursor: pointer;
   position: relative;
   outline: none;
+  transform: translateX(30%);
 }
 
 button:active {
   top: 2px;
+}
+
+.logger {
+  background: #dedede;
+  padding-top: 6px;
+  padding-bottom: 1px;
+  width: 250px;
+  margin-left: 20px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-weight: 800;
 }
 
 .user button:active {
@@ -42,7 +53,6 @@ button:active {
 }
 
 .user .head {
-  display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -52,12 +62,19 @@ button:active {
   background: #929292;
   padding: 5px;
   margin-right: 5px;
-  font-size: 12px;
+  font-size: 10px;
   color: #fff;
 }
 
 .user .status.active {
   background: #36af2e;
+}
+
+h3 {
+  font-style: italic;
+  text-align: center;
+  font-weight: 500;
+  font-family: ui-monospace;
 }
 
 .thread {
@@ -75,9 +92,12 @@ button:active {
 }
 
 .user {
-  margin: 10px;
+  margin: 20px;
   background: #dedede;
-  padding: 10px;
+  padding: 20px;
+  padding-bottom: 30;
+  display: inline-table;
+  width: 450px;
 }
 
 .user h2 {
@@ -98,7 +118,7 @@ ul li {
 
 divs {
   margin: 30px;
-  font-size: 20px;
+  font-size: 15px;
   justify-content: center;
   text-align: center;
 }

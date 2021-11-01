@@ -1,20 +1,11 @@
-module.exports = class userinfo {
-  constructor(
-    username,
-    email,
-    password,
-    service1,
-    service2,
-    service3,
-    deadvertise
-  ) {
+module.exports = class userinfoB2 {
+  constructor(username, email, password, service5, service6, service7) {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.service1 = service1;
-    this.service2 = service2;
-    this.service3 = service3;
-    this.deadvertise = deadvertise;
+    this.service5 = service5;
+    this.service6 = service6;
+    this.service7 = service7;
   }
 };
 

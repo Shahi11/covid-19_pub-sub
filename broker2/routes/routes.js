@@ -1,6 +1,7 @@
 const express = require("express");
 const CovidTally = require("../models/CovidTally");
-const userinfo = require("../models/userinfo");
+const userinfoB2 = require("../models/userinfoB2");
+const topicinfoB2 = require("../models/topicinfoB2");
 
 const router = express.Router();
 
@@ -108,7 +109,7 @@ router.put("/covidTally/:id", (req, res, next) => {
 
 router.post("/login/user", (req, res, next) => {
   console.log(req.body.email);
-  req.app.locals.db.collection("userinfo").findOne(
+  req.app.locals.db.collection("userinfoB2").findOne(
     {
       "newDocument.email": req.body.email,
       "newDocument.password": req.body.password,
@@ -126,12 +127,12 @@ router.post("/login/user", (req, res, next) => {
 });
 
 router.post("/login/add", (req, res, next) => {
-  const newDocument = new userinfo(
+  const newDocument = new userinfoB2(
     req.body.username,
     req.body.email,
     req.body.password
   );
-  req.app.locals.db.collection("userinfo").insertOne(
+  req.app.locals.db.collection("userinfoB2").insertOne(
     {
       newDocument,
     },
@@ -147,12 +148,14 @@ router.post("/login/add", (req, res, next) => {
 router.post("/subscribe/add", (req, res, next) => {
   // const newDocument = new userinfo(req.body.username, req.body.password);
   let key =
-    req.body.service1 !== undefined
-      ? "service1"
-      : req.body.service2 !== undefined
-      ? "service2"
-      : "service3";
-  req.app.locals.db.collection("userinfo").updateOne(
+    req.body.service5 !== undefined
+      ? "service5"
+      : req.body.service6 !== undefined
+      ? "service6"
+      : req.body.service7 !== undefined
+      ? "service7"
+      : undefined;
+  req.app.locals.db.collection("userinfoB2").updateOne(
     {
       "newDocument.email": req.body.email,
     },
@@ -171,7 +174,7 @@ router.post("/subscribe/add", (req, res, next) => {
 });
 
 router.get("/subscribe/list/:email", (req, res, next) => {
-  req.app.locals.db.collection("userinfo").findOne(
+  req.app.locals.db.collection("userinfoB2").findOne(
     {
       "newDocument.email": req.params.email,
     },
@@ -193,7 +196,7 @@ router.get("/subscribe/list/:email", (req, res, next) => {
 router.post("/deadvertise", (req, res, next) => {
   // const newDocument = new userinfo(req.body.username, req.body.password);
 
-  req.app.locals.db.collection("userinfo").updateOne(
+  req.app.locals.db.collection("userinfoB2").updateOne(
     {
       "newDocument.email": req.body.email,
     },
@@ -201,6 +204,21 @@ router.post("/deadvertise", (req, res, next) => {
       $set: {
         "newDocument.deadvertise": req.body.deadvertise,
       },
+    },
+    (err, result) => {
+      if (err) {
+        res.status(400).send({ error: err });
+      }
+      res.status(200).send(result);
+    }
+  );
+});
+
+router.post("/topictable/add", (req, res, next) => {
+  const newDocument = new topicinfoB2(req.body.servicenumber);
+  req.app.locals.db.collection("topicinfoB2").insertOne(
+    {
+      newDocument,
     },
     (err, result) => {
       if (err) {

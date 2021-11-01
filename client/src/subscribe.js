@@ -6,6 +6,13 @@ const INIT_SUBSCRIPTIONS = {
   service1: false,
   service2: false,
   service3: false,
+  service4: false,
+  service5: false,
+  service6: false,
+  service7: false,
+  service8: false,
+  service9: false,
+  service10: false,
 };
 
 const Home = () => {
@@ -23,18 +30,32 @@ const Home = () => {
       },
     })
       .then((res) => res.json())
-      .then(({ newDocument }) => {
-        console.log(newDocument);
+      .then((data) => {
+        console.log(data);
 
-        sessionStorage.setItem("service1", newDocument.service1 || false);
-        sessionStorage.setItem("service2", newDocument.service2 || false);
-        sessionStorage.setItem("service3", newDocument.service3 || false);
-        sessionStorage.setItem("deadvertise", newDocument.deadvertise || false);
+        sessionStorage.setItem("service1", data.service1 || false);
+        sessionStorage.setItem("service2", data.service2 || false);
+        sessionStorage.setItem("service3", data.service3 || false);
+        sessionStorage.setItem("service4", data.service4 || false);
+        sessionStorage.setItem("service5", data.service5 || false);
+        sessionStorage.setItem("service6", data.service6 || false);
+        sessionStorage.setItem("service7", data.service7 || false);
+        sessionStorage.setItem("service8", data.service8 || false);
+        sessionStorage.setItem("service9", data.service9 || false);
+        sessionStorage.setItem("service10", data.service10 || false);
+        sessionStorage.setItem("deadvertise", data.deadvertise || false);
 
         setSubscriptionStatuses({
-          service1: newDocument.service1 || false,
-          service2: newDocument.service2 || false,
-          service3: newDocument.service3 || false,
+          service1: data.service1 || false,
+          service2: data.service2 || false,
+          service3: data.service3 || false,
+          service4: data.service4 || false,
+          service5: data.service5 || false,
+          service6: data.service6 || false,
+          service7: data.service7 || false,
+          service8: data.service8 || false,
+          service9: data.service9 || false,
+          service10: data.service10 || false,
         });
       });
     // setSubscriptionStatuses here
@@ -105,15 +126,29 @@ const Home = () => {
   return (
     <div>
       <divs>
-        <h1>Services</h1>
-        <p>{sessionStorage.getItem("USER_EMAIL")}</p>
+        <h1>COVID-19 TRACKER</h1>
+        <h6>
+          click on subscribe buttons to stay updated with latest covid related
+          feed!
+        </h6>
+        <div class="logger">
+          <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+          />
+
+          <p>
+            <i class="fa fa-user"></i> : {sessionStorage.getItem("USER_EMAIL")}
+          </p>
+        </div>
       </divs>
 
+      {/* TOPIC 1 */}
       <div class="user js-user-1">
         <div class="head">
-          <h2>Covid Hotspot</h2>
+          <h3>Covid Hotspot Countries</h3>
         </div>
-        <button
+        <butt
           id="demo"
           onClick={() => handleSubmit("service1")}
           style={{
@@ -125,14 +160,15 @@ const Home = () => {
           {!subscriptionStatuses.service1
             ? "UNSUBSCRIBED!  Click me to subscribe"
             : "SUBSCRIBED! Click me to unsubscribe"}
-        </button>
+        </butt>
       </div>
 
-      <div class="user js-user-2">
+      {/* TOPIC 2 */}
+      <div class="user js-user-1">
         <div class="head">
-          <h2>Top 10 testing countries</h2>
+          <h3>Top 10 Testing Countries</h3>
         </div>
-        <button
+        <butt
           id="demo"
           onClick={() => handleSubmit("service2")}
           style={{
@@ -144,14 +180,15 @@ const Home = () => {
           {!subscriptionStatuses.service2
             ? "UNSUBSCRIBED!  Click me to subscribe"
             : "SUBSCRIBED! Click me to unsubscribe"}
-        </button>
+        </butt>
       </div>
 
-      <div class="user js-user-3">
+      {/* TOPIC 3 */}
+      <div class="user js-user-1">
         <div class="head">
-          <h2>Safe Countries to travel</h2>
+          <h3>Safe Countries to Travel</h3>
         </div>
-        <button
+        <butt
           id="demo"
           onClick={() => handleSubmit("service3")}
           style={{
@@ -163,8 +200,149 @@ const Home = () => {
           {!subscriptionStatuses.service3
             ? "UNSUBSCRIBED!  Click me to subscribe"
             : "SUBSCRIBED! Click me to unsubscribe"}
-        </button>
+        </butt>
       </div>
+
+      {/* TOPIC 4 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Countries with Most Active Cases</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service4")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service4
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service4
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
+      {/* TOPIC 5 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Most Death Suffering Countries</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service5")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service5
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service5
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
+      {/* TOPIC 6 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Countries with Least Testing ratio</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service6")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service6
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service6
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
+      {/* TOPIC 7 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Countries with Most Critical Cases</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service7")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service7
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service7
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
+      {/* TOPIC 8 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Least Active Cases Countires</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service8")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service8
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service8
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
+      {/* TOPIC 9 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Countries with Least Deaths</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service9")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service9
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service9
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
+      {/* TOPIC 10 */}
+      <div class="user js-user-1">
+        <div class="head">
+          <h3>Least Critical Cases Countries</h3>
+        </div>
+        <butt
+          id="demo"
+          onClick={() => handleSubmit("service10")}
+          style={{
+            backgroundColor: !subscriptionStatuses.service10
+              ? "rgb(230, 108, 108)"
+              : "rgb(4, 190, 60)",
+          }}
+        >
+          {!subscriptionStatuses.service10
+            ? "UNSUBSCRIBED!  Click me to subscribe"
+            : "SUBSCRIBED! Click me to unsubscribe"}
+        </butt>
+      </div>
+
       <div class="box-1">
         <div class="btnn btn-one" onClick={goHome}>
           <span>BACK</span>
