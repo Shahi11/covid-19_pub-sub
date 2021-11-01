@@ -1,6 +1,6 @@
 module.exports = class tests {
-    constructor(country, totalTests) {
+    constructor(country, totalTestsmost) {
         this.country = country
-        this.totalTests = totalTests
+        this.totalTestsmost = totalTestsmost
     }
 }
