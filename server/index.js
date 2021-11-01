@@ -60,7 +60,7 @@ MongoClient.connect(url, options, (err, database) => {
     socket.on("connect", function () {
       console.log("connected to server:3005");
       // Scheduler : runs every 3 seconds
-      setInterval(checkUpdates, 30000);
+      setInterval(checkUpdates, 3000);
     });
   });
 });
@@ -442,12 +442,6 @@ async function checkUpdates() {
               reject("Error");
             }
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-            let country = JSON.stringify( apiResponse.response[i].country);
-            let continent = JSON.stringify( apiResponse.response[i].continent);
-            console.log("Country ", country, " Continent ", continent, " api res",country == continent );
-            //console.log("Country Match ", JSON.stringify(apiResponse.response[i].country), "Continent Match ", JSON.stringify(apiResponse.response[i].continent), "is Match ", JSON.stringify( apiResponse.response[i].country) ==  JSON.stringify( apiResponse.response[i].continent));
-            // if (country != continent){
-            console.log("Inside first ");
             const newDocument = new CovidTallyPubSub(
               apiResponse.response[i].country,
               apiResponse.response[i].cases.active,
@@ -479,20 +473,16 @@ async function checkUpdates() {
       })
     );
   }
-console.log("Outside if ");
-  // console.log(await app.locals.db.collection("CasesSorted").count());
-  // console.log(await app.locals.db.collection("tests").count());
-  // console.log(await app.locals.db.collection("CasesSortedReverse").count());
-  // console.log(await app.locals.db.collection("testsRev").count());
+  console.log(await app.locals.db.collection("CasesSorted").count());
+  console.log(await app.locals.db.collection("tests").count());
+  console.log(await app.locals.db.collection("CasesSortedReverse").count());
+  console.log(await app.locals.db.collection("testsRev").count());
 
 
   // updating/adding data into specific tables
-  if ( await app.locals.db.collection("CasesSorted").count() >= 10) {
-    console.log("Inside if ");
-
+  if (app.locals.db.collection("CasesSorted").count() != 10) {
     Promise.all(arrayOfPromises)
       .then(async (res) => {
-        // console.log("Final Result", res);
         await task("casestotal", -1, "CasesSorted", () =>
           task("teststotalTests", -1, "tests", () =>
             task("casestotal", 1, "CasesSortedReverse", () =>
