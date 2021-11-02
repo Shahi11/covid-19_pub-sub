@@ -381,7 +381,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
         );
       }
 
-      if (Object.keys(serviceArray).length > 0) {
+      if (Object.keys(serviceArray).length > 0 && Object.keys(serviceArray).length % 10 == 0) {
         console.log("inside sending fiorward", serviceArray);
         socket.emit("broker1", serviceArray, 0);
       }
