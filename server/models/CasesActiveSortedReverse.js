@@ -1,6 +1,6 @@
 module.exports = class CasesActiveSortedReverse {
-    constructor(country, casesactiveleast) {
+    constructor(country, casesactivemost) {
         this.country = country
-        this.casesactiveleast = casesactiveleast
+        this.casesactivemost = casesactivemost
     }
 }
