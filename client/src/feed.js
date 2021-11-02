@@ -7,13 +7,32 @@ const setStorages = () => {
   if (sessionStorage.getItem("service1") == "true") {
     subscribeToTopic("casestotal");
   }
-
   if (sessionStorage.getItem("service2") == "true") {
-    subscribeToTopic("totalTests");
+    subscribeToTopic("totalTestsmost");
   }
-
   if (sessionStorage.getItem("service3") == "true") {
     subscribeToTopic("safeCountriesToVisit");
+  }
+  if (sessionStorage.getItem("service4") == "true") {
+    subscribeToTopic("casesactivemost");
+  }
+  if (sessionStorage.getItem("service5") == "true") {
+    subscribeToTopic("deathstotalDeathsmost");
+  }
+  if (sessionStorage.getItem("service6") == "true") {
+    subscribeToTopic("totalTestsleast");
+  }
+  if (sessionStorage.getItem("service7") == "true") {
+    subscribeToTopic("casescriticalmost");
+  }
+  if (sessionStorage.getItem("service8") == "true") {
+    subscribeToTopic("casesactiveleast");
+  }
+  if (sessionStorage.getItem("service9") == "true") {
+    subscribeToTopic("deathstotalDeathsleast");
+  }
+  if (sessionStorage.getItem("service10") == "true") {
+    subscribeToTopic("casescriticalleast");
   }
   if (sessionStorage.getItem("deadvertise") == "false") {
     subscribeToTopic("ad");
@@ -24,14 +43,36 @@ const Home = () => {
   const [service1Data, setService1Data] = useState(null);
   const [service2Data, setService2Data] = useState(null);
   const [service3Data, setService3Data] = useState(null);
+
+  const [service4Data, setService4Data] = useState(null);
+  const [service5Data, setService5Data] = useState(null);
+  const [service6Data, setService6Data] = useState(null);
+  const [service7Data, setService7Data] = useState(null);
+  const [service8Data, setService8Data] = useState(null);
+  const [service9Data, setService9Data] = useState(null);
+  const [service10Data, setService10Data] = useState(null);
+
   const [heading, setHeading] = useState(null);
   const [adData, setadData] = useState(null);
   const [deadvertise, setDeadvertise] = useState(null);
 
   const setDatas = () => {
     setService1Data(JSON.parse(sessionStorage.getItem("casestotal")));
-    setService2Data(JSON.parse(sessionStorage.getItem("totalTests")));
+    setService2Data(JSON.parse(sessionStorage.getItem("totalTestsmost")));
     setService3Data(JSON.parse(sessionStorage.getItem("safeCountriesToVisit")));
+
+    setService4Data(JSON.parse(sessionStorage.getItem("casesactivemost")));
+    setService5Data(
+      JSON.parse(sessionStorage.getItem("deathstotalDeathsmost"))
+    );
+    setService6Data(JSON.parse(sessionStorage.getItem("totalTestsleast")));
+    setService7Data(JSON.parse(sessionStorage.getItem("casescriticalmost")));
+    setService8Data(JSON.parse(sessionStorage.getItem("casesactiveleast")));
+    setService9Data(
+      JSON.parse(sessionStorage.getItem("deathstotalDeathsleast"))
+    );
+    setService10Data(JSON.parse(sessionStorage.getItem("casescriticalleast")));
+
     setadData(JSON.parse(sessionStorage.getItem("ad")));
     setDeadvertise(sessionStorage.getItem("deadvertise"));
     if (sessionStorage.getItem("service1") == "true") {
@@ -39,11 +80,36 @@ const Home = () => {
     }
 
     if (sessionStorage.getItem("service2") == "true") {
-      subscribeToTopic("totalTests");
+      subscribeToTopic("totalTestsmost");
     }
 
     if (sessionStorage.getItem("service3") == "true") {
       subscribeToTopic("safeCountriesToVisit");
+    }
+    if (sessionStorage.getItem("deadvertise") == "false") {
+      subscribeToTopic("ad");
+    }
+
+    if (sessionStorage.getItem("service4") == "true") {
+      subscribeToTopic("casesactivemost");
+    }
+    if (sessionStorage.getItem("service5") == "true") {
+      subscribeToTopic("deathstotalDeathsmost");
+    }
+    if (sessionStorage.getItem("service6") == "true") {
+      subscribeToTopic("totalTestsleast");
+    }
+    if (sessionStorage.getItem("service7") == "true") {
+      subscribeToTopic("casescriticalmost");
+    }
+    if (sessionStorage.getItem("service8") == "true") {
+      subscribeToTopic("casesactiveleast");
+    }
+    if (sessionStorage.getItem("service9") == "true") {
+      subscribeToTopic("deathstotalDeathsleast");
+    }
+    if (sessionStorage.getItem("service10") == "true") {
+      subscribeToTopic("casescriticalleast");
     }
     if (sessionStorage.getItem("deadvertise") == "false") {
       subscribeToTopic("ad");
@@ -114,7 +180,14 @@ const Home = () => {
       <br />
       {sessionStorage.getItem("service1") == "false" &&
         sessionStorage.getItem("service2") == "false" &&
-        sessionStorage.getItem("service3") == "false" && (
+        sessionStorage.getItem("service3") == "false" &&
+        sessionStorage.getItem("service4") == "false" &&
+        sessionStorage.getItem("service5") == "false" &&
+        sessionStorage.getItem("service6") == "false" &&
+        sessionStorage.getItem("service7") == "false" &&
+        sessionStorage.getItem("service8") == "false" &&
+        sessionStorage.getItem("service9") == "false" &&
+        sessionStorage.getItem("service10") == "false" && (
           <>
             <div>
               <h3>
@@ -158,10 +231,97 @@ const Home = () => {
           </div>
         </>
       )}
+
+      <br />
+      {sessionStorage.getItem("service4") == "true" && service4Data && (
+        <>
+          <h2>COUNTRIES WITH MOST ACTIVE CASES</h2>
+          <div className="serviceContainer">
+            {service4Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+
+      <br />
+      {sessionStorage.getItem("service5") == "true" && service5Data && (
+        <>
+          <h2>MOST DEATH SUFFERING COUNTRIES</h2>
+          <div className="serviceContainer">
+            {service5Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+      <br />
+      {sessionStorage.getItem("service6") == "true" && service6Data && (
+        <>
+          <h2>COUNTIRES WITH LEAST TESTING RATIO</h2>
+          <div className="serviceContainer">
+            {service6Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+      <br />
+      {sessionStorage.getItem("service7") == "true" && service7Data && (
+        <>
+          <h2>COUNTRIES WITH MOST CRITICAL CASES</h2>
+          <div className="serviceContainer">
+            {service7Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+      <br />
+      {sessionStorage.getItem("service8") == "true" && service8Data && (
+        <>
+          <h2>LEAST ACTIVE CASES COUNTRIES</h2>
+          <div className="serviceContainer">
+            {service8Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+      <br />
+      {sessionStorage.getItem("service9") == "true" && service9Data && (
+        <>
+          <h2>COUNTRIES WITH LEAST DEATHS</h2>
+          <div className="serviceContainer">
+            {service9Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+      <br />
+      {sessionStorage.getItem("service10") == "true" && service10Data && (
+        <>
+          <h2>LEAST CRITICAL CASES COUNTRIES</h2>
+          <div className="serviceContainer">
+            {service10Data.map((x) => {
+              return countryTab(x);
+            })}
+          </div>
+        </>
+      )}
+
       <br />
       {(sessionStorage.getItem("service1") == "false" ||
         sessionStorage.getItem("service2") == "false" ||
-        sessionStorage.getItem("service3") == "false") &&
+        sessionStorage.getItem("service3") == "false" ||
+        sessionStorage.getItem("service4") == "false" ||
+        sessionStorage.getItem("service5") == "false" ||
+        sessionStorage.getItem("service6") == "false" ||
+        sessionStorage.getItem("service7") == "false" ||
+        sessionStorage.getItem("service8") == "false" ||
+        sessionStorage.getItem("service9") == "false" ||
+        sessionStorage.getItem("service10") == "false") &&
         deadvertise == "false" &&
         adData && (
           <>
