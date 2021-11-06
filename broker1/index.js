@@ -87,6 +87,7 @@ MongoClient.connect(url, options, (err, database) => {
         console.log("updated key", key);
 
         counter++;
+
         if (key < 4) {
           const result1 = await SnImplement("service1");
           const result2 = await SnImplement("service2");
@@ -96,20 +97,19 @@ MongoClient.connect(url, options, (err, database) => {
           // console.log("2", result2);
           // console.log("3", result3);
           // console.log(key);
-          if (result1 || result2 || result3 || result4) {
-            if (result1 && data && data[0].safeCountriesToVisit) {
-              console.log("Inside sevice 1 pub");
-              publishToMq("service1", ".safeCountriesToVisit", data);
-            } else if (result2 && data && data[0].totalTests) {
-              console.log("Inside service2 pub");
-              publishToMq("service2", ".totalTests", data);
-            } else if (result3 && data && data[0].casestotal) {
-              console.log("Inside service 3 pub");
-              publishToMq("service3", ".casestotal", data);
-            } else if (result4 && data && data[0].casesactivemost) {
-              console.log("Inside service 4 pub");
-              publishToMq("service4", ".casesactivemost", data);
-            }
+
+          if (result1 && data && data[0].casestotal) {
+            console.log("Inside sevice 1 pub");
+            publishToMq("service1", ".casestotal", data);
+          } else if (result2 && data && data[0].totalTestsmost) {
+            console.log("Inside service2 pub");
+            publishToMq("service2", ".totalTestsmost", data);
+          } else if (result3 && data && data[0].safeCountriesToVisit) {
+            console.log("Inside service 3 pub");
+            publishToMq("service3", ".safeCountriesToVisit", data);
+          } else if (result4 && data && data[0].casesactivemost) {
+            console.log("Inside service 4 pub");
+            publishToMq("service4", ".casesactivemost", data);
           } else {
             console.log("Rendezvous to broker 2 ");
             socket2.emit("broker2", data, key + 1);
@@ -118,10 +118,9 @@ MongoClient.connect(url, options, (err, database) => {
           }
 
           // console.log(counter % 5 == 0);
-
-          if (counter % 10 == 0) {
+          if (counter % 25 == 0) {
             app.locals.db
-              .collection("userinfo")
+              .collection("userinfoB1")
               .find({
                 "newDocument.deadvertise": false,
               })

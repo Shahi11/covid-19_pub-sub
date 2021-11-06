@@ -94,17 +94,16 @@ MongoClient.connect(url, options, (err, database) => {
           // console.log("2", result2);
           // console.log("3", result3);
           // console.log(key);
-          if (result5 || result6 || result7) {
-            if (result5 && data && data[0].deathstotalDeathsmost) {
-              console.log("Inside sevice 5 pub");
-              publishToMq("service5", ".deathstotalDeathsmost", data);
-            } else if (result6 && data && data[0].totalTestsleast) {
-              console.log("Inside service 6 pub");
-              publishToMq("service6", ".totalTestsleast", data);
-            } else if (result7 && data && data[0].casescriticalmost) {
-              console.log("Inside service 7 pub");
-              publishToMq("service7", ".casescriticalmost", data);
-            }
+
+          if (result5 && data && data[0].deathstotalDeathsmost) {
+            console.log("Inside sevice 5 pub");
+            publishToMq("service5", ".deathstotalDeathsmost", data);
+          } else if (result6 && data && data[0].totalTestsleast) {
+            console.log("Inside service 6 pub");
+            publishToMq("service6", ".totalTestsleast", data);
+          } else if (result7 && data && data[0].casescriticalmost) {
+            console.log("Inside service 7 pub");
+            publishToMq("service7", ".casescriticalmost", data);
           } else {
             console.log("Rendezvous to broker 1");
             socket2.emit("broker1", data, key + 1);
