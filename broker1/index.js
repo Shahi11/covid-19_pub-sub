@@ -6,16 +6,19 @@ const MongoClient = require("mongodb").MongoClient;
 const cors = require("cors");
 const io = require("socket.io")(3005);
 
+// socket to connect to broker 2
 var io2 = require("socket.io-client");
 var socket2 = io2.connect("http://broker2:3006/", {
   reconnection: true,
 });
 
+// socket to connect to broker 3
 var io3 = require("socket.io-client");
 var socket3 = io3.connect("http://broker3:3007/", {
   reconnection: true,
 });
 
+//Connect to Mongo DB
 const url = `mongodb://mongo:27017/api`;
 const options = {
   useNewUrlParser: true,
@@ -34,8 +37,7 @@ app.use((req, res) => {
 });
 
 function publishToMq(service, serviceName, data) {
-  // code to be executed
-
+  //Get all users subscribed to this topic
   app.locals.db
     .collection("userinfoB1")
     .find({
@@ -50,6 +52,7 @@ function publishToMq(service, serviceName, data) {
       } else {
         for (var k = 0; k < result.length; k++) {
           var key = result[k].newDocument.email + serviceName;
+          //Publish event to all the users subscribed
           Publisher.publishMessage(key, data);
         }
       }
@@ -68,6 +71,7 @@ function publishToMq(service, serviceName, data) {
 //   });
 // }
 
+// Receives message when any broker or publisher sends message via socket
 MongoClient.connect(url, options, (err, database) => {
   if (err) {
     console.log(`FATAL MONGODB CONNECTION ERROR: ${err}:${err.stack}`);
@@ -111,13 +115,14 @@ MongoClient.connect(url, options, (err, database) => {
             console.log("Inside service 4 pub");
             publishToMq("service4", ".casesactivemost", data);
           } else {
+            // Rendevous to neighbouring broker if this broker is not responsible for this topic event
             console.log("Rendezvous to broker 2 ");
             socket2.emit("broker2", data, key + 1);
             console.log("Rendezvous to broker 3 ");
             socket3.emit("broker3", data, key + 1);
           }
 
-          // console.log(counter % 5 == 0);
+          // Random AD is sent to users logic
           if (counter % 5 == 0) {
             app.locals.db
               .collection("userinfoB1")

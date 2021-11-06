@@ -8,6 +8,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const cors = require("cors");
 
+// GET call to fetch all country covid statistics
 router.get("/covidTally", (req, res, next) => {
   try {
     req.app.locals.db
@@ -28,6 +29,7 @@ router.get("/covidTally", (req, res, next) => {
   }
 });
 
+// GET call to fetch one country covid statistics
 router.get("/covidTally/:id", (req, res, next) => {
   req.app.locals.db.collection("CovidTally").findOne(
     {
@@ -48,6 +50,7 @@ router.get("/covidTally/:id", (req, res, next) => {
   );
 });
 
+//POST call to add a countries covid statistics
 router.post("/covidTally", (req, res, next) => {
   const newDocument = new CovidTally(
     req.body.country,
@@ -71,6 +74,7 @@ router.post("/covidTally", (req, res, next) => {
   );
 });
 
+// DELETE call to delete one country's covid stastics
 router.delete("/covidTally/:id", (req, res, next) => {
   req.app.locals.db.collection("CovidTally").deleteOne(
     {
@@ -85,6 +89,7 @@ router.delete("/covidTally/:id", (req, res, next) => {
   );
 });
 
+//Put call to update covid stats of 1 country
 router.put("/covidTally/:id", (req, res, next) => {
   req.app.locals.db.collection("CovidTally").updateOne(
     {
@@ -110,6 +115,7 @@ router.put("/covidTally/:id", (req, res, next) => {
   );
 });
 
+// POST call to login a user
 router.post("/login/user", (req, res, next) => {
   console.log(req.body.email);
   req.app.locals.db.collection("userinfoB1").findOne(
@@ -129,8 +135,7 @@ router.post("/login/user", (req, res, next) => {
   );
 });
 
-//-----------------------------------------------------------------
-//SignUp user
+// Post call to sign up a user
 router.post("/login/add", (req, res, next) => {
   fetch("http://broker2:6000/lsds/login/add", {
     method: "POST",
@@ -178,8 +183,6 @@ router.post("/login/add", (req, res, next) => {
 // Rendevous of subcriptions
 
 router.post("/subscribe/add", async (req, res, next) => {
-  // const newDocument = new userinfo(req.body.username, req.body.password);
-
   let key =
     req.body.service1 !== undefined
       ? "service1"
@@ -314,9 +317,8 @@ router.get("/subscribe/list/:email", async (req, res, next) => {
 
 // ************************************************************************
 
+//POST Call to set deadvertise True for a user
 router.post("/deadvertise", (req, res, next) => {
-  // const newDocument = new userinfo(req.body.username, req.body.password);
-
   req.app.locals.db.collection("userinfoB1").updateOne(
     {
       "newDocument.email": req.body.email,
@@ -335,6 +337,7 @@ router.post("/deadvertise", (req, res, next) => {
   );
 });
 
+// POST call to add topics a broker is responsible for
 router.post("/topictable/add", (req, res, next) => {
   const newDocument = new topicinfoB1(req.body.servicenumber);
   req.app.locals.db.collection("topicinfoB1").insertOne(
