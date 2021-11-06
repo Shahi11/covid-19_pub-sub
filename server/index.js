@@ -60,6 +60,7 @@ MongoClient.connect(url, options, (err, database) => {
     socket.on("connect", function () {
       console.log("connected to server:3005");
       // Scheduler : runs every 3 seconds
+      checkUpdates()
       setInterval(checkUpdates, 3000);
     });
   });
@@ -442,65 +443,61 @@ async function checkUpdates() {
               reject("Error");
             }
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-            const newDocument = new CovidTallyPubSub(
-              apiResponse.response[i].country,
-              apiResponse.response[i].cases.active,
-              apiResponse.response[i].cases.critical,
-              apiResponse.response[i].cases.total,
-              apiResponse.response[i].deaths.total,
-              apiResponse.response[i].tests.total,
-              apiResponse.response[i].day,
-              apiResponse.response[i].time
-            );
-            await app.locals.db.collection("CovidTallyPubSub").insertOne(
-              {
-                newDocument,
-              },
-              (err, result) => {
-                if (err) {
-                  reject("Error");
-                } else {
-                  resolve({
-                    message: "Table updated",
-                    newData: i,
-                  });
+            let country = JSON.stringify( apiResponse.response[i].country);
+            let continent = JSON.stringify( apiResponse.response[i].continent);
+
+            if (country != continent){
+              const newDocument = new CovidTallyPubSub(
+                apiResponse.response[i].country,
+                apiResponse.response[i].cases.active,
+                apiResponse.response[i].cases.critical,
+                apiResponse.response[i].cases.total,
+                apiResponse.response[i].deaths.total,
+                apiResponse.response[i].tests.total,
+                apiResponse.response[i].day,
+                apiResponse.response[i].time
+              );
+              await app.locals.db.collection("CovidTallyPubSub").insertOne(
+                {
+                  newDocument,
                 }
-              }
-            );
-            //}
-          }
-        );
+              );
+            }
+            resolve();
+          });
       })
     );
   }
+
+  console.log(await app.locals.db.collection("testsRev").count());
   console.log(await app.locals.db.collection("CasesSorted").count());
   console.log(await app.locals.db.collection("tests").count());
   console.log(await app.locals.db.collection("CasesSortedReverse").count());
-  console.log(await app.locals.db.collection("testsRev").count());
 
 
   // updating/adding data into specific tables
-  if (app.locals.db.collection("CasesSorted").count() != 10) {
-    Promise.all(arrayOfPromises)
+  Promise.all(arrayOfPromises)
       .then(async (res) => {
-        await task("casestotal", -1, "CasesSorted", () =>
-          task("teststotalTests", -1, "tests", () =>
-            task("casestotal", 1, "CasesSortedReverse", () =>
-              task("teststotalTests", 1, "testsRev", () =>
-                  task("deathstotalDeaths", 1, "deathsSorted", () =>
-                      task("deathstotalDeaths", -1, "deathsSortedReverse", () =>
-                          task("casesactive", 1, "CasesActiveSorted", () =>
-                              task("casesactive", -1, "CasesActiveSortedReverse", () =>
-                                  task("casescritical", -1, "CriticalCasesSorted", () =>
-                                      task("casescritical", 1, "CriticalCasesSortedReverse", () => {})
-            )
-          )
-            )))))));
+        if (app.locals.db.collection("CasesSorted").count() != 10) {
+          console.log("HERE NOW")
+          await task("casestotal", -1, "CasesSorted", () =>
+              task("teststotalTests", -1, "tests", () =>
+                  task("casestotal", 1, "CasesSortedReverse", () =>
+                      task("teststotalTests", 1, "testsRev", () =>
+                          task("deathstotalDeaths", 1, "deathsSorted", () =>
+                              task("deathstotalDeaths", -1, "deathsSortedReverse", () =>
+                                  task("casesactive", 1, "CasesActiveSorted", () =>
+                                      task("casesactive", -1, "CasesActiveSortedReverse", () =>
+                                          task("casescritical", -1, "CriticalCasesSorted", () =>
+                                              task("casescritical", 1, "CriticalCasesSortedReverse", () => {})
+                                          )
+                                      )
+                                  )))))));
+        }
       })
       .catch((err) => {
         console.log("Final errors", err);
       });
-  }
 }
 
 module.exports = app;
