@@ -66,7 +66,7 @@ MongoClient.connect(url, options, (err, database) => {
 });
 
 const task = async (sortKey, sortIndex = -1, tableName, callback) => {
-  //Adding
+  //Adding the updated topic/event to the respective tables.
   let arrayOfPromises1 = [];
   console.log("inside task");
   await app.locals.db.collection(tableName).deleteMany({});
@@ -92,7 +92,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
       var serviceArray = [];
       console.log(typeof tableName);
-      if (tableName == "CasesSorted" && cache.length != 0) {
+      if (tableName == "CasesSorted" && cache.length != 0) {//topic 1
         for (var k = 0; k < 10; k++) {
           if (cache[k] != res[k].newDocument.country) {
             console.log(
@@ -104,7 +104,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "tests" && cache1.length != 0) {
+      } else if (tableName == "tests" && cache1.length != 0) {//topic 2
         for (var k = 0; k < 10; k++) {
           if (cache1[k] != res[k].newDocument.country) {
             console.log(
@@ -116,7 +116,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "CasesSortedReverse" && cache2.length != 0) {
+      } else if (tableName == "CasesSortedReverse" && cache2.length != 0) {//topic 3
         for (var k = 0; k < 10; k++) {
           if (cache2[k] != res[k].newDocument.country) {
             console.log(
@@ -128,7 +128,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "testsRev" && cache3.length != 0) {
+      } else if (tableName == "testsRev" && cache3.length != 0) {//topic 4
         for (var k = 0; k < 10; k++) {
           if (cache3[k] != res[k].newDocument.country) {
             console.log(
@@ -140,7 +140,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "deathsSorted" && cache4.length != 0) {
+      } else if (tableName == "deathsSorted" && cache4.length != 0) {//topic 5
         for (var k = 0; k < 10; k++) {
           if (cache4[k] != res[k].newDocument.country) {
             console.log(
@@ -152,7 +152,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      }else if (tableName == "deathsSortedReverse" && cache5.length != 0) {
+      }else if (tableName == "deathsSortedReverse" && cache5.length != 0) {//topic 6
         for (var k = 0; k < 10; k++) {
           if (cache5[k] != res[k].newDocument.country) {
             console.log(
@@ -164,7 +164,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      }else if (tableName == "CasesActiveSorted" && cache6.length != 0) {
+      }else if (tableName == "CasesActiveSorted" && cache6.length != 0) {//topic 7
         for (var k = 0; k < 10; k++) {
           if (cache6[k] != res[k].newDocument.country) {
             console.log(
@@ -176,7 +176,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      }else if (tableName == "CasesActiveSortedReverse" && cache7.length != 0) {
+      }else if (tableName == "CasesActiveSortedReverse" && cache7.length != 0) {//topic 8
         for (var k = 0; k < 10; k++) {
           if (cache7[k] != res[k].newDocument.country) {
             console.log(
@@ -188,7 +188,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      }else if (tableName == "CriticalCasesSorted" && cache8.length != 0) {
+      }else if (tableName == "CriticalCasesSorted" && cache8.length != 0) {//topic 9
         for (var k = 0; k < 10; k++) {
           if (cache8[k] != res[k].newDocument.country) {
             console.log(
@@ -200,7 +200,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      }else if (tableName == "CriticalCasesSortedReverse" && cache9.length != 0) {
+      }else if (tableName == "CriticalCasesSortedReverse" && cache9.length != 0) {//topic 10
         for (var k = 0; k < 10; k++) {
           if (cache9[k] != res[k].newDocument.country) {
             console.log(
@@ -236,7 +236,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             if (res) {
               let newServiceOne;
               switch (tableName) {
-                case "CasesSorted":
+                case "CasesSorted"://topic 1
                   if (status) {
                     console.log("helloo insidfe one");
                     cache[i] = res[i].newDocument.country;
@@ -250,7 +250,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "tests":
+                case "tests"://topic 2
                   if (status1) {
                     cache1[i] = res[i].newDocument.country;
                     newServiceOne = new tests(
@@ -263,7 +263,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "CasesSortedReverse":
+                case "CasesSortedReverse"://topic 3
                   if (status2) {
                     cache2[i] = res[i].newDocument.country;
                     newServiceOne = new CasesSortedReverse(
@@ -276,7 +276,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "testsRev":
+                case "testsRev"://topic 4
                   if(status3){
                     cache3[i] = res[i].newDocument.country;
                     newServiceOne = new testsRev(
@@ -289,7 +289,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "deathsSorted":
+                case "deathsSorted"://topic 5
                   if(status4){
                     cache4[i] = res[i].newDocument.country;
                     newServiceOne = new deathsSorted(
@@ -301,7 +301,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   }
                   break;
 
-                case "deathsSortedReverse":
+                case "deathsSortedReverse"://topic 6
                   if(status5){
                     cache5[i] = res[i].newDocument.country;
                     newServiceOne = new deathsSortedReverse(
@@ -313,7 +313,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   }
                   break;
 
-                case "CasesActiveSorted":
+                case "CasesActiveSorted"://topic 7
                   if(status6){
                     cache6[i] = res[i].newDocument.country;
                     newServiceOne = new CasesActiveSorted(
@@ -325,7 +325,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   }
                   break;
 
-                case "CasesActiveSortedReverse":
+                case "CasesActiveSortedReverse"://topic 8
                   if(status7){
                     cache7[i] = res[i].newDocument.country;
                     newServiceOne = new CasesActiveSortedReverse(
@@ -338,7 +338,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   break;
 
 
-                case "CriticalCasesSorted":
+                case "CriticalCasesSorted"://topic 9
                   if(status8){
                     cache8[i] = res[i].newDocument.country;
                     newServiceOne = new CriticalCasesSorted(
@@ -350,7 +350,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
                   }
                   break;
 
-                case "CriticalCasesSortedReverse":
+                case "CriticalCasesSortedReverse"://topic 10
                   if(status9){
                     cache9[i] = res[i].newDocument.country;
                     newServiceOne = new CriticalCasesSortedReverse(
