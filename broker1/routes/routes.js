@@ -132,7 +132,7 @@ router.post("/login/user", (req, res, next) => {
 //-----------------------------------------------------------------
 //SignUp user
 router.post("/login/add", (req, res, next) => {
-  fetch("http://localhost:6000/lsds/login/add", {
+  fetch("http://broker2:6000/lsds/login/add", {
     method: "POST",
     mode: "cors",
     headers: {
@@ -144,7 +144,7 @@ router.post("/login/add", (req, res, next) => {
     }),
   });
 
-  fetch("http://localhost:7000/lsds/login/add", {
+  fetch("http://broker3:7000/lsds/login/add", {
     method: "POST",
     mode: "cors",
     headers: {
@@ -204,7 +204,7 @@ router.post("/subscribe/add", async (req, res, next) => {
 
     console.log("2nd", key);
     if (key != undefined) {
-      const resp2 = await fetch("http://localhost:6000/lsds/subscribe/add", {
+      const resp2 = await fetch("http://broker2:6000/lsds/subscribe/add", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -222,7 +222,7 @@ router.post("/subscribe/add", async (req, res, next) => {
         res.status(400).send("No response");
       }
     } else {
-      const resp3 = await fetch("http://localhost:7000/lsds/subscribe/add", {
+      const resp3 = await fetch("http://broker3:7000/lsds/subscribe/add", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -264,7 +264,7 @@ router.post("/subscribe/add", async (req, res, next) => {
 
 router.get("/subscribe/list/:email", async (req, res, next) => {
   const resp2 = await fetch(
-    "http://localhost:6000/lsds/subscribe/list/" + req.params.email,
+    "http://broker2:6000/lsds/subscribe/list/" + req.params.email,
     {
       method: "GET",
       mode: "cors",
@@ -276,7 +276,7 @@ router.get("/subscribe/list/:email", async (req, res, next) => {
   ).then((res) => res.json());
 
   const resp3 = await fetch(
-    "http://localhost:7000/lsds/subscribe/list/" + req.params.email,
+    "http://broker3:7000/lsds/subscribe/list/" + req.params.email,
     {
       method: "GET",
       mode: "cors",

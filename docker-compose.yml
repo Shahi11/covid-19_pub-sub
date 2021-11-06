@@ -7,30 +7,52 @@ services:
       - "15672:15672"
       - "61613:61613"
       - "15674:15674"
+    networks:
+      - covidnet
   mongo:
     image: mongo:5.0.3
     ports:
       - "27017:27017"
+    networks:
+      - covidnet
   client:
     image: client
     stdin_open: true
     ports:
       - "3000:3000"
+  broker1:
+    image: broker1
+    stdin_open: true
+    restart: always
+    ports:
+      - "5000:5000"
+    networks:
+      - covidnet
+  broker2:
+    image: broker2
+    stdin_open: true
+    restart: always
+    ports:
+      - "6000:6000"
+    networks:
+      - covidnet
+  broker3:
+    image: broker3
+    stdin_open: true
+    restart: always
+    ports:
+      - "7000:7000"
+    networks:
+      - covidnet
   server:
     image: server
     stdin_open: true
     restart: always
     ports:
-      - "5000:5000"
-    depends_on:
-      - mongo
-      - rabbitmq
-  covid-pub:
-    image: covid-pub
-    stdin_open: true
-    restart: always
-    ports:
       - "4000:4000"
-    depends_on:
-      - mongo
-      - server
+    networks:
+      - covidnet
+
+networks:
+  covidnet:
+    driver: bridge

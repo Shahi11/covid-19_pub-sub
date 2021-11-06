@@ -12,28 +12,28 @@ export function subscribeToTopic(topicId) {
         if (topicId == "ad") {
           sessionStorage.setItem("ad", JSON.stringify(body));
         }
-        if (body[0].safeCountriesToVisit) {
+        if (topicId == "safeCountriesToVisit") {
           sessionStorage.setItem("safeCountriesToVisit", JSON.stringify(body));
-        } else if (body[0].casestotal) {
+        } else if (topicId == "casestotal") {
           sessionStorage.setItem("casestotal", JSON.stringify(body));
-        } else if (body[0].totalTestsmost) {
+        } else if (topicId == "totalTestsmost") {
           sessionStorage.setItem("totalTestsmost", JSON.stringify(body));
-        } else if (body[0].casesactivemost) {
+        } else if (topicId == "casesactivemost") {
           sessionStorage.setItem("casesactivemost", JSON.stringify(body));
-        } else if (body[0].deathstotalDeathsmost) {
+        } else if (topicId == "deathstotalDeathsmost") {
           sessionStorage.setItem("deathstotalDeathsmost", JSON.stringify(body));
-        } else if (body[0].totalTestsleast) {
+        } else if (topicId == "totalTestsleast") {
           sessionStorage.setItem("totalTestsleast", JSON.stringify(body));
-        } else if (body[0].casescriticalmost) {
+        } else if (topicId == "casescriticalmost") {
           sessionStorage.setItem("casescriticalmost", JSON.stringify(body));
-        } else if (body[0].casesactiveleast) {
+        } else if (topicId == "casesactiveleast") {
           sessionStorage.setItem("casesactiveleast", JSON.stringify(body));
-        } else if (body[0].deathstotalDeathsleast) {
+        } else if (topicId == "deathstotalDeathsleast") {
           sessionStorage.setItem(
             "deathstotalDeathsleast",
             JSON.stringify(body)
           );
-        } else if (body[0].casescriticalleast) {
+        } else if (topicId == "casescriticalleast") {
           sessionStorage.setItem("casescriticalleast", JSON.stringify(body));
         }
 

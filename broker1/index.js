@@ -7,16 +7,16 @@ const cors = require("cors");
 const io = require("socket.io")(3005);
 
 var io2 = require("socket.io-client");
-var socket2 = io2.connect("http://localhost:3006/", {
+var socket2 = io2.connect("http://broker2:3006/", {
   reconnection: true,
 });
 
 var io3 = require("socket.io-client");
-var socket3 = io3.connect("http://localhost:3007/", {
+var socket3 = io3.connect("http://broker3:3007/", {
   reconnection: true,
 });
 
-const url = `mongodb://localhost:27017/api`;
+const url = `mongodb://mongo:27017/api`;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -56,17 +56,17 @@ function publishToMq(service, serviceName, data) {
     });
 }
 
-async function SnImplement(service) {
-  return new Promise(async (resolve, reject) => {
-    const result = await app.locals.db.collection("topicinfoB1").findOne({
-      "newDocument.servicenumber": service,
-    });
-    resolve(result);
-  }).then((res) => {
-    if (!res) return false;
-    return true;
-  });
-}
+// async function SnImplement(service) {
+//   return new Promise(async (resolve, reject) => {
+//     const result = await app.locals.db.collection("topicinfoB1").findOne({
+//       "newDocument.servicenumber": service,
+//     });
+//     resolve(result);
+//   }).then((res) => {
+//     if (!res) return false;
+//     return true;
+//   });
+// }
 
 MongoClient.connect(url, options, (err, database) => {
   if (err) {
@@ -89,25 +89,25 @@ MongoClient.connect(url, options, (err, database) => {
         counter++;
 
         if (key < 4) {
-          const result1 = await SnImplement("service1");
-          const result2 = await SnImplement("service2");
-          const result3 = await SnImplement("service3");
-          const result4 = await SnImplement("service4");
+          // const result1 = await SnImplement("service1");
+          // const result2 = await SnImplement("service2");
+          // const result3 = await SnImplement("service3");
+          // const result4 = await SnImplement("service4");
           // console.log("1", result1);
           // console.log("2", result2);
           // console.log("3", result3);
           // console.log(key);
 
-          if (result1 && data && data[0].casestotal) {
+          if (data && "casestotal" in data[0]) {
             console.log("Inside sevice 1 pub");
             publishToMq("service1", ".casestotal", data);
-          } else if (result2 && data && data[0].totalTestsmost) {
+          } else if (data && "totalTestsmost" in data[0]) {
             console.log("Inside service2 pub");
             publishToMq("service2", ".totalTestsmost", data);
-          } else if (result3 && data && data[0].safeCountriesToVisit) {
+          } else if (data && "safeCountriesToVisit" in data[0]) {
             console.log("Inside service 3 pub");
             publishToMq("service3", ".safeCountriesToVisit", data);
-          } else if (result4 && data && data[0].casesactivemost) {
+          } else if (data && "casesactivemost" in data[0]) {
             console.log("Inside service 4 pub");
             publishToMq("service4", ".casesactivemost", data);
           } else {
@@ -118,11 +118,11 @@ MongoClient.connect(url, options, (err, database) => {
           }
 
           // console.log(counter % 5 == 0);
-          if (counter % 25 == 0) {
+          if (counter % 5 == 0) {
             app.locals.db
               .collection("userinfoB1")
               .find({
-                "newDocument.deadvertise": false,
+                "newDocument.deadvertise": false || null,
               })
               .toArray((err, result) => {
                 if (err) {

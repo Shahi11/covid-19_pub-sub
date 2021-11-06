@@ -10,8 +10,6 @@ const CasesActiveSortedReverse = require("./models/CasesActiveSortedReverse");
 const CriticalCasesSorted = require("./models/CriticalCasesSorted");
 const CriticalCasesSortedReverse = require("./models/CriticalCasesSortedReverse");
 
-
-
 let cache = [];
 let cache1 = [];
 let cache2 = [];
@@ -24,7 +22,7 @@ let cache8 = [];
 let cache9 = [];
 
 var io = require("socket.io-client");
-var socket = io.connect("http://localhost:3005/", {
+var socket = io.connect("http://broker1:3005/", {
   reconnection: true,
 });
 
@@ -35,7 +33,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const cors = require("cors");
 
-const url = `mongodb://localhost:27017`
+const url = `mongodb://mongo:27017`;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -60,7 +58,7 @@ MongoClient.connect(url, options, (err, database) => {
     socket.on("connect", function () {
       console.log("connected to server:3005");
       // Scheduler : runs every 3 seconds
-      checkUpdates()
+      checkUpdates();
       setInterval(checkUpdates, 3000);
     });
   });
@@ -93,7 +91,8 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
       var serviceArray = [];
       console.log(typeof tableName);
-      if (tableName == "CasesSorted" && cache.length != 0) {//topic 1
+      if (tableName == "CasesSorted" && cache.length != 0) {
+        //topic 1
         for (var k = 0; k < 10; k++) {
           if (cache[k] != res[k].newDocument.country) {
             console.log(
@@ -105,7 +104,8 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "tests" && cache1.length != 0) {//topic 2
+      } else if (tableName == "tests" && cache1.length != 0) {
+        //topic 2
         for (var k = 0; k < 10; k++) {
           if (cache1[k] != res[k].newDocument.country) {
             console.log(
@@ -117,7 +117,8 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "CasesSortedReverse" && cache2.length != 0) {//topic 3
+      } else if (tableName == "CasesSortedReverse" && cache2.length != 0) {
+        //topic 3
         for (var k = 0; k < 10; k++) {
           if (cache2[k] != res[k].newDocument.country) {
             console.log(
@@ -129,91 +130,104 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             break;
           }
         }
-      } else if (tableName == "testsRev" && cache3.length != 0) {//topic 4
+      } else if (tableName == "testsRev" && cache3.length != 0) {
+        //topic 4
         for (var k = 0; k < 10; k++) {
           if (cache3[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 1",
-                cache3[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 1",
+              cache3[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status3 = true;
             break;
           }
         }
-      } else if (tableName == "deathsSorted" && cache4.length != 0) {//topic 5
+      } else if (tableName == "deathsSorted" && cache4.length != 0) {
+        //topic 5
         for (var k = 0; k < 10; k++) {
           if (cache4[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 4 ",
-                cache4[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 4 ",
+              cache4[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status4 = true;
             break;
           }
         }
-      }else if (tableName == "deathsSortedReverse" && cache5.length != 0) {//topic 6
+      } else if (tableName == "deathsSortedReverse" && cache5.length != 0) {
+        //topic 6
         for (var k = 0; k < 10; k++) {
           if (cache5[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 4 ",
-                cache5[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 4 ",
+              cache5[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status5 = true;
             break;
           }
         }
-      }else if (tableName == "CasesActiveSorted" && cache6.length != 0) {//topic 7
+      } else if (tableName == "CasesActiveSorted" && cache6.length != 0) {
+        //topic 7
         for (var k = 0; k < 10; k++) {
           if (cache6[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 4 ",
-                cache6[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 4 ",
+              cache6[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status6 = true;
             break;
           }
         }
-      }else if (tableName == "CasesActiveSortedReverse" && cache7.length != 0) {//topic 8
+      } else if (
+        tableName == "CasesActiveSortedReverse" &&
+        cache7.length != 0
+      ) {
+        //topic 8
         for (var k = 0; k < 10; k++) {
           if (cache7[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 4 ",
-                cache7[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 4 ",
+              cache7[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status7 = true;
             break;
           }
         }
-      }else if (tableName == "CriticalCasesSorted" && cache8.length != 0) {//topic 9
+      } else if (tableName == "CriticalCasesSorted" && cache8.length != 0) {
+        //topic 9
         for (var k = 0; k < 10; k++) {
           if (cache8[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 4 ",
-                cache8[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 4 ",
+              cache8[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status8 = true;
             break;
           }
         }
-      }else if (tableName == "CriticalCasesSortedReverse" && cache9.length != 0) {//topic 10
+      } else if (
+        tableName == "CriticalCasesSortedReverse" &&
+        cache9.length != 0
+      ) {
+        //topic 10
         for (var k = 0; k < 10; k++) {
           if (cache9[k] != res[k].newDocument.country) {
             console.log(
-                "Abhinav 4 ",
-                cache9[k],
-                JSON.stringify(res[k].newDocument.country)
+              "Abhinav 4 ",
+              cache9[k],
+              JSON.stringify(res[k].newDocument.country)
             );
             status9 = true;
             break;
           }
         }
-      }else {
+      } else {
         status1 = true;
         status = true;
         status2 = true;
@@ -237,7 +251,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
             if (res) {
               let newServiceOne;
               switch (tableName) {
-                case "CasesSorted"://topic 1
+                case "CasesSorted": //topic 1
                   if (status) {
                     console.log("helloo insidfe one");
                     cache[i] = res[i].newDocument.country;
@@ -251,7 +265,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "tests"://topic 2
+                case "tests": //topic 2
                   if (status1) {
                     cache1[i] = res[i].newDocument.country;
                     newServiceOne = new tests(
@@ -264,7 +278,7 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "CasesSortedReverse"://topic 3
+                case "CasesSortedReverse": //topic 3
                   if (status2) {
                     cache2[i] = res[i].newDocument.country;
                     newServiceOne = new CasesSortedReverse(
@@ -277,12 +291,12 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "testsRev"://topic 4
-                  if(status3){
+                case "testsRev": //topic 4
+                  if (status3) {
                     cache3[i] = res[i].newDocument.country;
                     newServiceOne = new testsRev(
-                        res[i].newDocument.country,
-                        res[i].newDocument.teststotalTests
+                      res[i].newDocument.country,
+                      res[i].newDocument.teststotalTests
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
@@ -290,73 +304,72 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
 
                   break;
 
-                case "deathsSorted"://topic 5
-                  if(status4){
+                case "deathsSorted": //topic 5
+                  if (status4) {
                     cache4[i] = res[i].newDocument.country;
                     newServiceOne = new deathsSorted(
-                        res[i].newDocument.country,
-                        res[i].newDocument.deathstotalDeaths
+                      res[i].newDocument.country,
+                      res[i].newDocument.deathstotalDeaths
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
                   }
                   break;
 
-                case "deathsSortedReverse"://topic 6
-                  if(status5){
+                case "deathsSortedReverse": //topic 6
+                  if (status5) {
                     cache5[i] = res[i].newDocument.country;
                     newServiceOne = new deathsSortedReverse(
-                        res[i].newDocument.country,
-                        res[i].newDocument.deathstotalDeaths
+                      res[i].newDocument.country,
+                      res[i].newDocument.deathstotalDeaths
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
                   }
                   break;
 
-                case "CasesActiveSorted"://topic 7
-                  if(status6){
+                case "CasesActiveSorted": //topic 7
+                  if (status6) {
                     cache6[i] = res[i].newDocument.country;
                     newServiceOne = new CasesActiveSorted(
-                        res[i].newDocument.country,
-                        res[i].newDocument.casesactive
+                      res[i].newDocument.country,
+                      res[i].newDocument.casesactive
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
                   }
                   break;
 
-                case "CasesActiveSortedReverse"://topic 8
-                  if(status7){
+                case "CasesActiveSortedReverse": //topic 8
+                  if (status7) {
                     cache7[i] = res[i].newDocument.country;
                     newServiceOne = new CasesActiveSortedReverse(
-                        res[i].newDocument.country,
-                        res[i].newDocument.casesactive
+                      res[i].newDocument.country,
+                      res[i].newDocument.casesactive
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
                   }
                   break;
 
-
-                case "CriticalCasesSorted"://topic 9
-                  if(status8){
+                case "CriticalCasesSorted": //topic 9
+                  if (status8) {
                     cache8[i] = res[i].newDocument.country;
                     newServiceOne = new CriticalCasesSorted(
-                        res[i].newDocument.country,
-                        res[i].newDocument.casescritical
+                      res[i].newDocument.country,
+                      res[i].newDocument.casescritical
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
                   }
                   break;
 
-                case "CriticalCasesSortedReverse"://topic 10
-                  if(status9){
+                case "CriticalCasesSortedReverse": //topic 10
+                  if (status9) {
                     cache9[i] = res[i].newDocument.country;
                     newServiceOne = new CriticalCasesSortedReverse(
-                        res[i].newDocument.country,
-                        res[i].newDocument.casescritical
+                      res[i].newDocument.country,
+                      res[i].newDocument.casescritical
                     );
                     serviceArray.push(newServiceOne);
                     console.log(serviceArray);
@@ -382,7 +395,10 @@ const task = async (sortKey, sortIndex = -1, tableName, callback) => {
         );
       }
 
-      if (Object.keys(serviceArray).length > 0 && Object.keys(serviceArray).length % 10 == 0) {
+      if (
+        Object.keys(serviceArray).length > 0 &&
+        Object.keys(serviceArray).length % 10 == 0
+      ) {
         console.log("inside sending fiorward", serviceArray);
         socket.emit("broker1", serviceArray, 0);
       }
@@ -443,10 +459,10 @@ async function checkUpdates() {
               reject("Error");
             }
             await app.locals.db.collection("CovidTallyPubSub").deleteMany({});
-            let country = JSON.stringify( apiResponse.response[i].country);
-            let continent = JSON.stringify( apiResponse.response[i].continent);
+            let country = JSON.stringify(apiResponse.response[i].country);
+            let continent = JSON.stringify(apiResponse.response[i].continent);
 
-            if (country != continent){
+            if (country != continent) {
               const newDocument = new CovidTallyPubSub(
                 apiResponse.response[i].country,
                 apiResponse.response[i].cases.active,
@@ -457,14 +473,13 @@ async function checkUpdates() {
                 apiResponse.response[i].day,
                 apiResponse.response[i].time
               );
-              await app.locals.db.collection("CovidTallyPubSub").insertOne(
-                {
-                  newDocument,
-                }
-              );
+              await app.locals.db.collection("CovidTallyPubSub").insertOne({
+                newDocument,
+              });
             }
             resolve();
-          });
+          }
+        );
       })
     );
   }
@@ -474,30 +489,40 @@ async function checkUpdates() {
   console.log(await app.locals.db.collection("tests").count());
   console.log(await app.locals.db.collection("CasesSortedReverse").count());
 
-
   // updating/adding data into specific tables
   Promise.all(arrayOfPromises)
-      .then(async (res) => {
-        if (app.locals.db.collection("CasesSorted").count() != 10) {
-          console.log("HERE NOW")
-          await task("casestotal", -1, "CasesSorted", () =>
-              task("teststotalTests", -1, "tests", () =>
-                  task("casestotal", 1, "CasesSortedReverse", () =>
-                      task("teststotalTests", 1, "testsRev", () =>
-                          task("deathstotalDeaths", 1, "deathsSorted", () =>
-                              task("deathstotalDeaths", -1, "deathsSortedReverse", () =>
-                                  task("casesactive", 1, "CasesActiveSorted", () =>
-                                      task("casesactive", -1, "CasesActiveSortedReverse", () =>
-                                          task("casescritical", -1, "CriticalCasesSorted", () =>
-                                              task("casescritical", 1, "CriticalCasesSortedReverse", () => {})
-                                          )
-                                      )
-                                  )))))));
-        }
-      })
-      .catch((err) => {
-        console.log("Final errors", err);
-      });
+    .then(async (res) => {
+      if (app.locals.db.collection("CasesSorted").count() != 10) {
+        console.log("HERE NOW");
+        await task("casestotal", -1, "CasesSorted", () =>
+          task("teststotalTests", -1, "tests", () =>
+            task("casestotal", 1, "CasesSortedReverse", () =>
+              task("teststotalTests", 1, "testsRev", () =>
+                task("deathstotalDeaths", 1, "deathsSorted", () =>
+                  task("deathstotalDeaths", -1, "deathsSortedReverse", () =>
+                    task("casesactive", 1, "CasesActiveSorted", () =>
+                      task("casesactive", -1, "CasesActiveSortedReverse", () =>
+                        task("casescritical", -1, "CriticalCasesSorted", () =>
+                          task(
+                            "casescritical",
+                            1,
+                            "CriticalCasesSortedReverse",
+                            () => {}
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    })
+    .catch((err) => {
+      console.log("Final errors", err);
+    });
 }
 
 module.exports = app;
