@@ -4,13 +4,14 @@ export function subscribeToTopic(topicId) {
   var ws = new WebSocket("ws://localhost:15674/ws");
   let stompClient = Stomp.over(ws);
   stompClient.connect({}, function () {
-    stompClient.subscribe("queue." + topicId, function ({ body }) {
+    stompClient.subscribe("queue." + sessionStorage.getItem("USER_EMAIL") + "."+ topicId, 
+    function ({ body }) {
       body = JSON.parse(body);
-      if (body[0].safeCountriesToVisit) {
+      if (topicId == "safeCountriesToVisit") {
         sessionStorage.setItem("safeCountriesToVisit", JSON.stringify(body));
-      } else if (body[0].casestotal) {
+      } else if (topicId == "casestotal") {
         sessionStorage.setItem("casestotal", JSON.stringify(body));
-      } else if (body[0].totalTests) {
+      } else if (topicId == "totalTests") {
         sessionStorage.setItem("totalTests", JSON.stringify(body));
       }
       if (topicId == "ad") {
